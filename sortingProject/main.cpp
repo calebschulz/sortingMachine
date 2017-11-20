@@ -211,10 +211,12 @@ int main(void)
 		if(reflQueueChange){
 			//turn off interrupts? ***
 			cli();
-// 			if(delayStepper){
-// 				mTimer(50);
-// 				delayStepper = 0;
-// 			}	
+
+			if(delayStepper){
+				mTimer(STEPPER_MOVE_DELAY);
+				delayStepper = 0;
+			}	
+
 			if(reflQueue[frontOfQueue] == BLACK){
 				stepGoalPosition = STEPPER_BLACK_POSITION;
 			}
@@ -227,16 +229,7 @@ int main(void)
 			else if(reflQueue[frontOfQueue] == ALUMINUM){
 				stepGoalPosition = STEPPER_ALUMINIUM_POSITION;
 			}
-			//*** do we need inARow?
-// 			reflInARow = 0;
-// 			for(unsigned char i=1; i<reflQueueCount; i++){
-// 				if(stepGoalPosition == reflQueue[i]){
-// 					reflInARow++;
-// 				}
-// 				else{
-// 					break;
-// 				}
-// 			}
+
 			reflQueueChange = 0;
 			//turn interrupts back on? ***
 			sei();

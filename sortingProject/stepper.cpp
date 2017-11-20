@@ -137,9 +137,15 @@ ISR(TIMER0_COMPA_vect){
 	
 	unsigned char nextItem = 0;
 	int difference =  stepGoalPosition - stepCurrentPosition;
+	unsigned char shortAbsDifference = ((difference >= 0) ? difference : -difference);//abs(difference)
 	
+	//Find circular shortest distance
+	if(shortAbsDifference > 100){
+		shortAbsDifference = 200 - shortAbsDifference;
+	}
+
 	//////////PLACE BLOCK INTO BIN ONCE CLOSE ENOUGH
-	if(((difference >= 0) ? difference : -difference) < CLOSE_ENOUGH){// abs(difference) < CLOSE_ENOUGH
+	if(shortAbsDifference < CLOSE_ENOUGH){
 		PORTC |= 8;
 		if(blockReady){
 			//////////MOTOR ON
@@ -154,11 +160,19 @@ ISR(TIMER0_COMPA_vect){
 			PORTC |= 0x10;
 			//Stepper Dequeue is ready and we have arrived at goal
 			//////////DEQUEUE BLOCK
-			frontOfQueue = (frontOfQueue + 1) & 7; //& 7 implements a rotating array pointer
-			reflQueueCount--;
-			reflQueueChange = 1;
-			sDequeueRdy = 0;
-			
+			if(reflQueueCount < 2){
+				reflQueueCount = 0;
+			}
+			else{
+				nextItem = (frontOfQueue+1) & 7;
+				if(reflQueue[frontOfQueue] != reflQueue[nextItem]){
+					delayStepper = 1;
+				}
+				frontOfQueue = nextItem; //& 7 implements a rotating array pointer
+				reflQueueCount--;
+				reflQueueChange = 1;
+			}
+			sDequeueRdy = 0;	
 		}
 	}
 	else{
@@ -180,20 +194,16 @@ ISR(TIMER0_COMPA_vect){
 		//***
 		stepAPosition = (stepAPosition - 1) & 3; //& 3 is a bitwise %4, creates a circular loop through stepArray
 	}
+
 	PORTA = (PORTA & 0b11000000) | stepArray[stepAPosition];
 	//PORTC = stepArray[stepAPosition];
-	
-	difference = ((difference >= 0) ? difference : -difference);
-	if(difference > 100){
-		difference = 200 - difference;
-	}
 
 	//////////ACCELERATION/DECELERATION ***
-	if(difference > 25 && stepperDelay > MIN_STEPPER_DELAY){
-		stepperDelay -= 4; //+= ~ 1 ms
+	if(shortAbsDifference > 30 && stepperDelay > MIN_STEPPER_DELAY){
+		stepperDelay -= ACCELERATION_RATE; //+= ~ 1 ms
 	}
-	else if(difference < NUMBER_STEPS_DECELERATION && stepperDelay <= MAX_STEPPER_DELAY){
-		stepperDelay += 4;
+	else if(shortAbsDifference < NUMBER_STEPS_DECELERATION && stepperDelay <= MAX_STEPPER_DELAY){
+		stepperDelay += ACCELERATION_RATE;
 	}
 	//Set the initial value of the timer counter to 0
 	TCNT0 = 0x0;

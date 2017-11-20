@@ -158,22 +158,17 @@ ISR(INT3_vect){
 // 				reflQueueCount = 0;
 // 			}
 			//else{
-				if(reflQueueCount > 1){
+				if(reflQueueCount < 2){
+					reflQueueCount = 0;
+				}
+				else{
 					nextItem = (frontOfQueue+1) & 7;
 					if(reflQueue[frontOfQueue] != reflQueue[nextItem]){
 						delayStepper = 1;
 					}
-					else{
-						
-					}
 					frontOfQueue = nextItem; //& 7 implements a rotating array pointer
 					reflQueueCount--;
 					reflQueueChange = 1;
-				}
-				else{
-					reflQueueCount = 0;
-					
-					
 				}
 			//}
 		}
