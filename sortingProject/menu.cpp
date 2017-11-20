@@ -6,6 +6,7 @@
  */ 
 
 #include "Framebuffer.h"
+#include "extInt.h"
 
 extern Framebuffer myDisplay;
 extern volatile unsigned char reflQueue[];
@@ -16,6 +17,10 @@ extern volatile int stepCurrentPosition;
 extern volatile int stepGoalPosition;
 extern volatile unsigned char stepperDelay;
 extern volatile unsigned int lowestRefl;
+extern volatile unsigned char blackCount;
+extern volatile unsigned char whiteCount;
+extern volatile unsigned char steelCount;
+extern volatile unsigned char aluminumCount;
 
 void menu1Start(){
 	myDisplay.clear();
@@ -78,5 +83,21 @@ void menuDebugS(){
 	myDisplay.drawNumber(60,16,stepGoalPosition);
 	myDisplay.drawString(0,32,"Delay:");
 	myDisplay.drawNumber(72,32,stepperDelay);
+	myDisplay.show();
+}
+
+void menuDisplayItemCount(){
+	myDisplay.clear();
+	myDisplay.drawString(column(0),row(1),"On Belt:");
+	myDisplay.drawNumber(column(9),row(1),reflQueueCount);
+	myDisplay.drawString(column(1),row(2),"Sorted:");
+	myDisplay.drawString(column(1),row(3),"B:");
+	myDisplay.drawNumber(column(3),row(3),blackCount);
+	myDisplay.drawString(column(7),row(3),"W:");
+	myDisplay.drawNumber(column(8),row(3),whiteCount);
+	myDisplay.drawString(column(1),row(4),"S:");
+	myDisplay.drawNumber(column(3),row(4),steelCount);
+	myDisplay.drawString(column(7),row(4),"A:");
+	myDisplay.drawNumber(column(9),row(4),aluminumCount);
 	myDisplay.show();
 }

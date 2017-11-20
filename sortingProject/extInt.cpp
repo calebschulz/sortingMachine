@@ -35,6 +35,7 @@ volatile unsigned char blackCount = 0;
 volatile unsigned char whiteCount = 0;
 volatile unsigned char steelCount = 0;
 volatile unsigned char aluminumCount = 0;
+volatile unsigned char firstEnqueue = 0; //Used in main to ensure the dequeued count of items doesn't include first enqueued item
 
 volatile char blockReady = 0;
 volatile char stepperRdy = 1; //*** turn this into extern when adding stepper
@@ -126,12 +127,12 @@ ISR(INT2_vect){
 			reflQueueCount++;
 			reflQueue[backOfQueue] = itemValue;
 			reflQueueChange = 1;
+			firstEnqueue = 1; 
 		}
 		else{
 			reflQueueCount++;
 			backOfQueue = (backOfQueue + 1) & 7;
 			reflQueue[backOfQueue] = itemValue;
- 			reflQueueChange = 1;
  		}	
 		//Error checking for < 0? ***
 		

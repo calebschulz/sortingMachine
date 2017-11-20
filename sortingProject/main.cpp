@@ -33,6 +33,11 @@ extern volatile unsigned char debugCount;
 extern volatile char frontOfQueue;
 extern volatile char backOfQueue;
 extern volatile unsigned char delayStepper;
+extern volatile unsigned char blackCount;
+extern volatile unsigned char whiteCount;
+extern volatile unsigned char steelCount;
+extern volatile unsigned char aluminumCount;
+extern volatile unsigned char firstEnqueue;
 
 Framebuffer myDisplay;
 
@@ -193,8 +198,12 @@ int main(void)
 		
 	//////////DISPLAY RESULTS MENU SCREEN 3
 	displayResults:
-	PORTC = 0xcc; //***
-	while(1);
+	menuDisplayItemCount();
+	while(1){
+		if((PINB & JS_LEFT_PIN) == 0){
+			goto mainLoop;
+		}
+	}
 		
     //////////MAIN LOOP
 	mainLoop:
@@ -216,18 +225,38 @@ int main(void)
 				mTimer(STEPPER_MOVE_DELAY);
 				delayStepper = 0;
 			}	
-
-			if(reflQueue[frontOfQueue] == BLACK){
-				stepGoalPosition = STEPPER_BLACK_POSITION;
+			if(firstEnqueue){
+				if(reflQueue[frontOfQueue] == BLACK){
+					stepGoalPosition = STEPPER_BLACK_POSITION;
+				}
+				else if(reflQueue[frontOfQueue] == WHITE){
+					stepGoalPosition = STEPPER_WHITE_POSITION;
+				}
+				else if(reflQueue[frontOfQueue] == STEEL){
+					stepGoalPosition = STEPPER_STEEL_POSITION;
+				}
+				else if(reflQueue[frontOfQueue] == ALUMINUM){
+					stepGoalPosition = STEPPER_ALUMINIUM_POSITION;
+				}
+				firstEnqueue = 0;
 			}
-			else if(reflQueue[frontOfQueue] == WHITE){
-				stepGoalPosition = STEPPER_WHITE_POSITION;
-			}
-			else if(reflQueue[frontOfQueue] == STEEL){
-				stepGoalPosition = STEPPER_STEEL_POSITION;
-			}
-			else if(reflQueue[frontOfQueue] == ALUMINUM){
-				stepGoalPosition = STEPPER_ALUMINIUM_POSITION;
+			else{
+				if(reflQueue[frontOfQueue] == BLACK){
+					stepGoalPosition = STEPPER_BLACK_POSITION;
+					blackCount++;
+				}
+				else if(reflQueue[frontOfQueue] == WHITE){
+					stepGoalPosition = STEPPER_WHITE_POSITION;
+					whiteCount++;
+				}
+				else if(reflQueue[frontOfQueue] == STEEL){
+					stepGoalPosition = STEPPER_STEEL_POSITION;
+					steelCount++;
+				}
+				else if(reflQueue[frontOfQueue] == ALUMINUM){
+					stepGoalPosition = STEPPER_ALUMINIUM_POSITION;
+					aluminumCount++;
+				}
 			}
 
 			reflQueueChange = 0;
@@ -236,7 +265,7 @@ int main(void)
 		}
 
 		//Allows user to go to results display
-		if((PORTB & JS_LEFT_PIN) == 0){
+		if((PINE & JS_RIGHT_PIN) == 0){
 			//Brake motor
 			MOTOR_PORT = (MOTOR_PORT & ~MOTOR_PINS) | MOTOR_BRAKE;
 			//Wait for motor to stop before turning off interrupts
