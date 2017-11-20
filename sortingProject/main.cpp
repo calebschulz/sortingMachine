@@ -69,7 +69,7 @@ int main(void)
 	
 	motorBrake();
 	motorSpeed(0x80);
-	
+	PORTC=0xf;
 	/*//Manual Optical sensor calibration
 		static unsigned int min = 1023;
 		sei();

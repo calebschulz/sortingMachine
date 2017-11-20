@@ -88,16 +88,16 @@ void menuDebugS(){
 
 void menuDisplayItemCount(){
 	myDisplay.clear();
-	myDisplay.drawString(column(0),row(1),"On Belt:");
+	myDisplay.drawString(column(1),row(1),"On Belt:");
 	myDisplay.drawNumber(column(9),row(1),reflQueueCount);
 	myDisplay.drawString(column(1),row(2),"Sorted:");
-	myDisplay.drawString(column(1),row(3),"B:");
+	myDisplay.drawString(column(1),row(3),"B=");
 	myDisplay.drawNumber(column(3),row(3),blackCount);
-	myDisplay.drawString(column(7),row(3),"W:");
+	myDisplay.drawString(column(6),row(3),"W:");
 	myDisplay.drawNumber(column(8),row(3),whiteCount);
 	myDisplay.drawString(column(1),row(4),"S:");
 	myDisplay.drawNumber(column(3),row(4),steelCount);
-	myDisplay.drawString(column(7),row(4),"A:");
-	myDisplay.drawNumber(column(9),row(4),aluminumCount);
+	myDisplay.drawString(column(6),row(4),"A:");
+	myDisplay.drawNumber(column(8),row(4),aluminumCount);
 	myDisplay.show();
 }

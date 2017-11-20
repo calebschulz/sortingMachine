@@ -33,7 +33,7 @@ For more information, please refer to <http://unlicense.org/>
 
 
 #define column(x) 12*(x-1)
-#define row(y) = 16*(y-1)
+#define row(y) 16*(y-1)
 
 class Framebuffer {
 public:
