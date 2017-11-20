@@ -37,7 +37,7 @@ extern volatile unsigned char blackCount;
 extern volatile unsigned char whiteCount;
 extern volatile unsigned char steelCount;
 extern volatile unsigned char aluminumCount;
-extern volatile unsigned char firstEnqueue;
+
 
 Framebuffer myDisplay;
 
@@ -225,38 +225,18 @@ int main(void)
 				mTimer(STEPPER_MOVE_DELAY);
 				delayStepper = 0;
 			}	
-			if(firstEnqueue){
-				if(reflQueue[frontOfQueue] == BLACK){
-					stepGoalPosition = STEPPER_BLACK_POSITION;
-				}
-				else if(reflQueue[frontOfQueue] == WHITE){
-					stepGoalPosition = STEPPER_WHITE_POSITION;
-				}
-				else if(reflQueue[frontOfQueue] == STEEL){
-					stepGoalPosition = STEPPER_STEEL_POSITION;
-				}
-				else if(reflQueue[frontOfQueue] == ALUMINUM){
-					stepGoalPosition = STEPPER_ALUMINIUM_POSITION;
-				}
-				firstEnqueue = 0;
+			
+			if(reflQueue[frontOfQueue] == BLACK){
+				stepGoalPosition = STEPPER_BLACK_POSITION;
 			}
-			else{
-				if(reflQueue[frontOfQueue] == BLACK){
-					stepGoalPosition = STEPPER_BLACK_POSITION;
-					blackCount++;
-				}
-				else if(reflQueue[frontOfQueue] == WHITE){
-					stepGoalPosition = STEPPER_WHITE_POSITION;
-					whiteCount++;
-				}
-				else if(reflQueue[frontOfQueue] == STEEL){
-					stepGoalPosition = STEPPER_STEEL_POSITION;
-					steelCount++;
-				}
-				else if(reflQueue[frontOfQueue] == ALUMINUM){
-					stepGoalPosition = STEPPER_ALUMINIUM_POSITION;
-					aluminumCount++;
-				}
+			else if(reflQueue[frontOfQueue] == WHITE){
+				stepGoalPosition = STEPPER_WHITE_POSITION;
+			}
+			else if(reflQueue[frontOfQueue] == STEEL){
+				stepGoalPosition = STEPPER_STEEL_POSITION;
+			}
+			else if(reflQueue[frontOfQueue] == ALUMINUM){
+				stepGoalPosition = STEPPER_ALUMINIUM_POSITION;
 			}
 
 			reflQueueChange = 0;

@@ -159,6 +159,19 @@ ISR(TIMER0_COMPA_vect){
 		else if(difference == 0){
 			PORTC |= 0x10;
 			//Stepper Dequeue is ready and we have arrived at goal
+			//////////COUNT NUMBER OF EACH SORTED
+			if(reflQueue[frontOfQueue] == BLACK){
+				blackCount++;
+			}
+			else if(reflQueue[frontOfQueue] == WHITE){
+				whiteCount++;
+			}
+			else if(reflQueue[frontOfQueue] == STEEL){
+				steelCount++;
+			}
+			else if(reflQueue[frontOfQueue] == ALUMINUM){
+				aluminumCount++;
+			}
 			//////////DEQUEUE BLOCK
 			if(reflQueueCount < 2){
 				reflQueueCount = 0;

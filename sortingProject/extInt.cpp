@@ -35,7 +35,6 @@ volatile unsigned char blackCount = 0;
 volatile unsigned char whiteCount = 0;
 volatile unsigned char steelCount = 0;
 volatile unsigned char aluminumCount = 0;
-volatile unsigned char firstEnqueue = 0; //Used in main to ensure the dequeued count of items doesn't include first enqueued item
 
 volatile char blockReady = 0;
 volatile char stepperRdy = 1; //*** turn this into extern when adding stepper
@@ -127,7 +126,6 @@ ISR(INT2_vect){
 			reflQueueCount++;
 			reflQueue[backOfQueue] = itemValue;
 			reflQueueChange = 1;
-			firstEnqueue = 1; 
 		}
 		else{
 			reflQueueCount++;
@@ -153,25 +151,34 @@ ISR(INT3_vect){
 		
 		if(stepperReady){
 			//////////PUT BLOCK IN BIN (leave motor on) 
-			//////////DEQUEUE BLOCK
-			//If front == back -> Last item has been sorted *** handle case where last item arrives
-// 			if(frontOfQueue == backOfQueue && ){
-// 				reflQueueCount = 0;
-// 			}
-			//else{
+			
+				//////////COUNT NUMBER OF EACH SORTED
+				if(reflQueue[frontOfQueue] == BLACK){
+					blackCount++;
+				}
+				else if(reflQueue[frontOfQueue] == WHITE){
+					whiteCount++;
+				}
+				else if(reflQueue[frontOfQueue] == STEEL){
+					steelCount++;
+				}
+				else if(reflQueue[frontOfQueue] == ALUMINUM){
+					aluminumCount++;
+				}
+
+				//////////DEQUEUE BLOCK
 				if(reflQueueCount < 2){
 					reflQueueCount = 0;
 				}
 				else{
-					nextItem = (frontOfQueue+1) & 7;
+					nextItem = (frontOfQueue+1) & 7; //& 7 implements a rotating array position
 					if(reflQueue[frontOfQueue] != reflQueue[nextItem]){
 						delayStepper = 1;
 					}
-					frontOfQueue = nextItem; //& 7 implements a rotating array pointer
+					frontOfQueue = nextItem; 
 					reflQueueCount--;
 					reflQueueChange = 1;
 				}
-			//}
 		}
 		else{
 			//Motor brake
