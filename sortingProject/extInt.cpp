@@ -131,7 +131,6 @@ ISR(INT2_vect){
 			reflQueueCount++;
 			backOfQueue = (backOfQueue + 1) & 7;
 			reflQueue[backOfQueue] = itemValue;
- 			reflQueueChange = 1;
  		}	
 		//Error checking for < 0? ***
 		
