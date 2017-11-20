@@ -200,10 +200,10 @@ ISR(TIMER0_COMPA_vect){
 
 	//////////ACCELERATION/DECELERATION ***
 	if(shortAbsDifference > 30 && stepperDelay > MIN_STEPPER_DELAY){
-		stepperDelay -= ACCELERATION_RATE; //+= ~ 1 ms
+		stepperDelay -= STEPPER_ACCELERATION_RATE; //+= ~ 1 ms
 	}
 	else if(shortAbsDifference < NUMBER_STEPS_DECELERATION && stepperDelay <= MAX_STEPPER_DELAY){
-		stepperDelay += ACCELERATION_RATE;
+		stepperDelay += STEPPER_ACCELERATION_RATE;
 	}
 	//Set the initial value of the timer counter to 0
 	TCNT0 = 0x0;
