@@ -25,7 +25,7 @@ void initADC() {
 	//ADC enable | prescaler 
 	ADCSRA |= _BV(ADEN);
 	ADCSRA |= _BV(ADPS0) | _BV(ADPS1) | _BV(ADPS2); //0b111 -> 1/128
-	// AVCC with external capacitor on AREF pin
+	// ADC1 - AVCC with external capacitor on AREF pin
 	ADMUX |= _BV(MUX0) | _BV(REFS0);// | _BV(ADLAR);
 }
 
@@ -103,8 +103,7 @@ void calibrateADC(){
 	lowestRefl. Then it will start another ADC reading.
 */
 ISR(ADC_vect) {
-	PORTC |= 2;
-
+	
 	if(ADC < lowestRefl){
 		lowestRefl = ADC;
 	}

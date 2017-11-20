@@ -95,6 +95,8 @@ Discarded input sections
  .bss           0x00000000        0x0 stepper.o
  .text._Z19rotateStepperToGoalv
                 0x00000000       0x92 stepper.o
+ .text._Z18stepperCalibrationv
+                0x00000000      0x11e stepper.o
  .bss.shortPath
                 0x00000000        0x1 stepper.o
  .text          0x00000000        0x0 timer.o
@@ -333,7 +335,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000     0x2002
+.text           0x00000000     0x20b6
  *(.vectors)
  .vectors       0x00000000       0x98 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/at90usb1287/avr51/crtat90usb1287.o
                 0x00000000                __vectors
@@ -443,160 +445,163 @@ END GROUP
                 0x00000690      0x158 adc.o
                 0x00000690                _Z12calibrateADCv
  .text.__vector_29
-                0x000007e8       0x66 adc.o
+                0x000007e8       0x64 adc.o
                 0x000007e8                __vector_29
  .text._Z10initExtIntv
-                0x0000084e       0x18 extInt.o
-                0x0000084e                _Z10initExtIntv
+                0x0000084c       0x18 extInt.o
+                0x0000084c                _Z10initExtIntv
  .text.__vector_3
-                0x00000866      0x156 extInt.o
-                0x00000866                __vector_3
+                0x00000864      0x14e extInt.o
+                0x00000864                __vector_3
  .text.__vector_4
-                0x000009bc       0xc2 extInt.o
-                0x000009bc                __vector_4
+                0x000009b2      0x12c extInt.o
+                0x000009b2                __vector_4
  .text.__vector_default
-                0x00000a7e       0x1c extInt.o
-                0x00000a7e                __vector_default
+                0x00000ade       0x1c extInt.o
+                0x00000ade                __vector_default
  .text._ZN11Framebuffer9drawPixelEhh
-                0x00000a9a       0x3a Framebuffer.o
-                0x00000a9a                _ZN11Framebuffer9drawPixelEhh
+                0x00000afa       0x3a Framebuffer.o
+                0x00000afa                _ZN11Framebuffer9drawPixelEhh
  .text._ZN11Framebuffer9drawVLineEhhh
-                0x00000ad4       0x32 Framebuffer.o
-                0x00000ad4                _ZN11Framebuffer9drawVLineEhhh
+                0x00000b34       0x32 Framebuffer.o
+                0x00000b34                _ZN11Framebuffer9drawVLineEhhh
  .text._ZN11Framebuffer9drawHLineEhhh
-                0x00000b06       0x32 Framebuffer.o
-                0x00000b06                _ZN11Framebuffer9drawHLineEhhh
+                0x00000b66       0x32 Framebuffer.o
+                0x00000b66                _ZN11Framebuffer9drawHLineEhhh
  .text._ZN11Framebuffer13drawRectangleEhhhh
-                0x00000b38       0x56 Framebuffer.o
-                0x00000b38                _ZN11Framebuffer13drawRectangleEhhhh
+                0x00000b98       0x56 Framebuffer.o
+                0x00000b98                _ZN11Framebuffer13drawRectangleEhhhh
  .text._ZN11Framebuffer13drawRectangleEhhhhh
-                0x00000b8e       0x86 Framebuffer.o
-                0x00000b8e                _ZN11Framebuffer13drawRectangleEhhhhh
+                0x00000bee       0x86 Framebuffer.o
+                0x00000bee                _ZN11Framebuffer13drawRectangleEhhhhh
  .text._ZN11Framebuffer5clearEv
-                0x00000c14        0xe Framebuffer.o
-                0x00000c14                _ZN11Framebuffer5clearEv
+                0x00000c74        0xe Framebuffer.o
+                0x00000c74                _ZN11Framebuffer5clearEv
  .text._ZN11FramebufferC2Ev
-                0x00000c22       0x14 Framebuffer.o
-                0x00000c22                _ZN11FramebufferC1Ev
-                0x00000c22                _ZN11FramebufferC2Ev
+                0x00000c82       0x14 Framebuffer.o
+                0x00000c82                _ZN11FramebufferC1Ev
+                0x00000c82                _ZN11FramebufferC2Ev
  .text._ZN11Framebuffer4showEv
-                0x00000c36        0x8 Framebuffer.o
-                0x00000c36                _ZN11Framebuffer4showEv
+                0x00000c96        0x8 Framebuffer.o
+                0x00000c96                _ZN11Framebuffer4showEv
  .text._ZN11Framebuffer8drawCharEiihjjh
-                0x00000c3e      0x128 Framebuffer.o
-                0x00000c3e                _ZN11Framebuffer8drawCharEiihjjh
+                0x00000c9e      0x128 Framebuffer.o
+                0x00000c9e                _ZN11Framebuffer8drawCharEiihjjh
  .text._ZN11Framebuffer10drawStringEiiPKc
-                0x00000d66       0x6c Framebuffer.o
-                0x00000d66                _ZN11Framebuffer10drawStringEiiPKc
+                0x00000dc6       0x6c Framebuffer.o
+                0x00000dc6                _ZN11Framebuffer10drawStringEiiPKc
  .text._ZN11Framebuffer10drawNumberEiii
-                0x00000dd2       0xb0 Framebuffer.o
-                0x00000dd2                _ZN11Framebuffer10drawNumberEiii
+                0x00000e32       0xb0 Framebuffer.o
+                0x00000e32                _ZN11Framebuffer10drawNumberEiii
  .text._ZN3I2CC2Ev
-                0x00000e82        0x2 I2C.o
-                0x00000e82                _ZN3I2CC2Ev
-                0x00000e82                _ZN3I2CC1Ev
+                0x00000ee2        0x2 I2C.o
+                0x00000ee2                _ZN3I2CC2Ev
+                0x00000ee2                _ZN3I2CC1Ev
  .text._ZN3I2C4initEh
-                0x00000e84       0x10 I2C.o
-                0x00000e84                _ZN3I2C4initEh
+                0x00000ee4       0x10 I2C.o
+                0x00000ee4                _ZN3I2C4initEh
  .text._ZN3I2C5startEv
-                0x00000e94       0x5c I2C.o
-                0x00000e94                _ZN3I2C5startEv
+                0x00000ef4       0x5c I2C.o
+                0x00000ef4                _ZN3I2C5startEv
  .text._ZN3I2C5writeEh
-                0x00000ef0       0x2a I2C.o
-                0x00000ef0                _ZN3I2C5writeEh
+                0x00000f50       0x2a I2C.o
+                0x00000f50                _ZN3I2C5writeEh
  .text._ZN3I2C4stopEv
-                0x00000f1a       0x12 I2C.o
-                0x00000f1a                _ZN3I2C4stopEv
- .text.main     0x00000f2c      0x246 main.o
-                0x00000f2c                main
+                0x00000f7a       0x12 I2C.o
+                0x00000f7a                _ZN3I2C4stopEv
+ .text.main     0x00000f8c      0x21e main.o
+                0x00000f8c                main
  .text._GLOBAL__sub_I_debug
-                0x00001172        0x8 main.o
+                0x000011aa        0x8 main.o
  .text._Z10menu1Startv
-                0x0000117a       0x5e menu.o
-                0x0000117a                _Z10menu1Startv
+                0x000011b2       0x5e menu.o
+                0x000011b2                _Z10menu1Startv
  .text._Z16menu1Calibrationv
-                0x000011d8       0x5e menu.o
-                0x000011d8                _Z16menu1Calibrationv
+                0x00001210       0x5e menu.o
+                0x00001210                _Z16menu1Calibrationv
+ .text._Z9menu2Homev
+                0x0000126e       0x44 menu.o
+                0x0000126e                _Z9menu2Homev
  .text._Z12menu2Stepperv
-                0x00001236       0x5e menu.o
-                0x00001236                _Z12menu2Stepperv
+                0x000012b2       0x44 menu.o
+                0x000012b2                _Z12menu2Stepperv
  .text._Z9menu2Reflv
-                0x00001294       0x5e menu.o
-                0x00001294                _Z9menu2Reflv
+                0x000012f6       0x44 menu.o
+                0x000012f6                _Z9menu2Reflv
  .text._Z10menuDebugQv
-                0x000012f2      0x14c menu.o
-                0x000012f2                _Z10menuDebugQv
+                0x0000133a      0x14c menu.o
+                0x0000133a                _Z10menuDebugQv
  .text._Z20menuDisplayItemCountv
-                0x0000143e       0xde menu.o
-                0x0000143e                _Z20menuDisplayItemCountv
+                0x00001486       0xde menu.o
+                0x00001486                _Z20menuDisplayItemCountv
  .text._Z9initMotorv
-                0x0000151c       0x32 motor.o
-                0x0000151c                _Z9initMotorv
+                0x00001564       0x32 motor.o
+                0x00001564                _Z9initMotorv
  .text._Z10motorSpeedc
-                0x0000154e        0xa motor.o
-                0x0000154e                _Z10motorSpeedc
+                0x00001596        0xa motor.o
+                0x00001596                _Z10motorSpeedc
  .text._Z12motorForwardv
-                0x00001558        0xa motor.o
-                0x00001558                _Z12motorForwardv
+                0x000015a0        0xa motor.o
+                0x000015a0                _Z12motorForwardv
  .text._Z10motorBrakev
-                0x00001562        0x8 motor.o
-                0x00001562                _Z10motorBrakev
+                0x000015aa        0x8 motor.o
+                0x000015aa                _Z10motorBrakev
  .text._ZN7SSD130611sendCommandEh
-                0x0000156a       0x24 SSD1306.o
-                0x0000156a                _ZN7SSD130611sendCommandEh
+                0x000015b2       0x24 SSD1306.o
+                0x000015b2                _ZN7SSD130611sendCommandEh
  .text._ZN7SSD1306C2Ev
-                0x0000158e       0xaa SSD1306.o
-                0x0000158e                _ZN7SSD1306C1Ev
-                0x0000158e                _ZN7SSD1306C2Ev
+                0x000015d6       0xaa SSD1306.o
+                0x000015d6                _ZN7SSD1306C1Ev
+                0x000015d6                _ZN7SSD1306C2Ev
  .text._ZN7SSD130615sendFramebufferEPh
-                0x00001638       0x8c SSD1306.o
-                0x00001638                _ZN7SSD130615sendFramebufferEPh
+                0x00001680       0x8c SSD1306.o
+                0x00001680                _ZN7SSD130615sendFramebufferEPh
  .text._Z11initStepperv
-                0x000016c4       0x14 stepper.o
-                0x000016c4                _Z11initStepperv
+                0x0000170c       0x14 stepper.o
+                0x0000170c                _Z11initStepperv
  .text._Z12startStepperv
-                0x000016d8       0x14 stepper.o
-                0x000016d8                _Z12startStepperv
+                0x00001720       0x14 stepper.o
+                0x00001720                _Z12startStepperv
  .text._Z13rotateStepperii
-                0x000016ec       0xf8 stepper.o
-                0x000016ec                _Z13rotateStepperii
+                0x00001734       0xf8 stepper.o
+                0x00001734                _Z13rotateStepperii
  .text._Z11homeStepperv
-                0x000017e4       0x26 stepper.o
-                0x000017e4                _Z11homeStepperv
+                0x0000182c       0x26 stepper.o
+                0x0000182c                _Z11homeStepperv
  .text.__vector_21
-                0x0000180a      0x1d8 stepper.o
-                0x0000180a                __vector_21
+                0x00001852      0x244 stepper.o
+                0x00001852                __vector_21
  .text._Z9initTimerv
-                0x000019e2       0x18 timer.o
-                0x000019e2                _Z9initTimerv
+                0x00001a96       0x18 timer.o
+                0x00001a96                _Z9initTimerv
  .text._Z6mTimeri
-                0x000019fa       0x3c timer.o
-                0x000019fa                _Z6mTimeri
- .text.libgcc   0x00001a36       0x12 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_tablejump2.o)
-                0x00001a36                __tablejump2__
+                0x00001aae       0x3c timer.o
+                0x00001aae                _Z6mTimeri
+ .text.libgcc   0x00001aea       0x12 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_tablejump2.o)
+                0x00001aea                __tablejump2__
  .text.avr-libc
-                0x00001a48       0x5c c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(sprintf.o)
-                0x00001a48                sprintf
+                0x00001afc       0x5c c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(sprintf.o)
+                0x00001afc                sprintf
  .text.avr-libc
-                0x00001aa4      0x3fa c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(vfprintf_std.o)
-                0x00001aa4                vfprintf
+                0x00001b58      0x3fa c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(vfprintf_std.o)
+                0x00001b58                vfprintf
  .text.avr-libc
-                0x00001e9e       0x16 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(strnlen_P.o)
-                0x00001e9e                strnlen_P
+                0x00001f52       0x16 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(strnlen_P.o)
+                0x00001f52                strnlen_P
  .text.avr-libc
-                0x00001eb4       0x16 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(strnlen.o)
-                0x00001eb4                strnlen
+                0x00001f68       0x16 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(strnlen.o)
+                0x00001f68                strnlen
  .text.avr-libc
-                0x00001eca       0x78 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(fputc.o)
-                0x00001eca                fputc
+                0x00001f7e       0x78 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(fputc.o)
+                0x00001f7e                fputc
  .text.avr-libc
-                0x00001f42       0xbc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(ultoa_invert.o)
-                0x00001f42                __ultoa_invert
-                0x00001ffe                . = ALIGN (0x2)
+                0x00001ff6       0xbc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(ultoa_invert.o)
+                0x00001ff6                __ultoa_invert
+                0x000020b2                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00001ffe        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_exit.o)
-                0x00001ffe                _exit
-                0x00001ffe                exit
+ .fini9         0x000020b2        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_exit.o)
+                0x000020b2                _exit
+                0x000020b2                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -615,11 +620,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00001ffe        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_exit.o)
+ .fini0         0x000020b2        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_exit.o)
  *(.fini0)
-                0x00002002                _etext = .
+                0x000020b6                _etext = .
 
-.data           0x00800100       0xc4 load address 0x00002002
+.data           0x00800100       0xe2 load address 0x000020b6
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -652,84 +657,79 @@ END GROUP
  .rodata.str1.1
                 0x00800134        0x3 Framebuffer.o
  .rodata.str1.1
-                0x00800137       0x88 menu.o
-                                 0x9b (size before relaxing)
+                0x00800137       0xa7 menu.o
  .rodata._ZL9stepArray
-                0x008001bf        0x4 stepper.o
+                0x008001de        0x4 stepper.o
  *(.gnu.linkonce.d*)
-                0x008001c4                . = ALIGN (0x2)
- *fill*         0x008001c3        0x1 
-                0x008001c4                _edata = .
-                0x008001c4                PROVIDE (__data_end, .)
+                0x008001e2                . = ALIGN (0x2)
+                0x008001e2                _edata = .
+                0x008001e2                PROVIDE (__data_end, .)
 
-.bss            0x008001c4      0x41c
-                0x008001c4                PROVIDE (__bss_start, .)
+.bss            0x008001e2      0x41b
+                0x008001e2                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
  .bss.blockReady
-                0x008001c4        0x1 extInt.o
-                0x008001c4                blockReady
- .bss.firstEnqueue
-                0x008001c5        0x1 extInt.o
-                0x008001c5                firstEnqueue
+                0x008001e2        0x1 extInt.o
+                0x008001e2                blockReady
  .bss.aluminumCount
-                0x008001c6        0x1 extInt.o
-                0x008001c6                aluminumCount
+                0x008001e3        0x1 extInt.o
+                0x008001e3                aluminumCount
  .bss.steelCount
-                0x008001c7        0x1 extInt.o
-                0x008001c7                steelCount
+                0x008001e4        0x1 extInt.o
+                0x008001e4                steelCount
  .bss.whiteCount
-                0x008001c8        0x1 extInt.o
-                0x008001c8                whiteCount
+                0x008001e5        0x1 extInt.o
+                0x008001e5                whiteCount
  .bss.blackCount
-                0x008001c9        0x1 extInt.o
-                0x008001c9                blackCount
+                0x008001e6        0x1 extInt.o
+                0x008001e6                blackCount
  .bss.reflQueueChange
-                0x008001ca        0x1 extInt.o
-                0x008001ca                reflQueueChange
+                0x008001e7        0x1 extInt.o
+                0x008001e7                reflQueueChange
  .bss.backOfQueue
-                0x008001cb        0x1 extInt.o
-                0x008001cb                backOfQueue
+                0x008001e8        0x1 extInt.o
+                0x008001e8                backOfQueue
  .bss.frontOfQueue
-                0x008001cc        0x1 extInt.o
-                0x008001cc                frontOfQueue
+                0x008001e9        0x1 extInt.o
+                0x008001e9                frontOfQueue
  .bss.reflQueueCount
-                0x008001cd        0x1 extInt.o
-                0x008001cd                reflQueueCount
+                0x008001ea        0x1 extInt.o
+                0x008001ea                reflQueueCount
  .bss.reflQueue
-                0x008001ce        0x8 extInt.o
-                0x008001ce                reflQueue
+                0x008001eb        0x8 extInt.o
+                0x008001eb                reflQueue
  .bss.myDisplay
-                0x008001d6      0x402 main.o
-                0x008001d6                myDisplay
+                0x008001f3      0x402 main.o
+                0x008001f3                myDisplay
  .bss.delayStepper
-                0x008005d8        0x1 stepper.o
-                0x008005d8                delayStepper
+                0x008005f5        0x1 stepper.o
+                0x008005f5                delayStepper
  .bss.sDequeueRdy
-                0x008005d9        0x1 stepper.o
-                0x008005d9                sDequeueRdy
+                0x008005f6        0x1 stepper.o
+                0x008005f6                sDequeueRdy
  .bss.stepperReady
-                0x008005da        0x1 stepper.o
-                0x008005da                stepperReady
+                0x008005f7        0x1 stepper.o
+                0x008005f7                stepperReady
  .bss.stepAPosition
-                0x008005db        0x1 stepper.o
-                0x008005db                stepAPosition
+                0x008005f8        0x1 stepper.o
+                0x008005f8                stepAPosition
  .bss.stepGoalPosition
-                0x008005dc        0x2 stepper.o
-                0x008005dc                stepGoalPosition
+                0x008005f9        0x2 stepper.o
+                0x008005f9                stepGoalPosition
  .bss.stepCurrentPosition
-                0x008005de        0x2 stepper.o
-                0x008005de                stepCurrentPosition
+                0x008005fb        0x2 stepper.o
+                0x008005fb                stepCurrentPosition
  *(COMMON)
-                0x008005e0                PROVIDE (__bss_end, .)
-                0x00002002                __data_load_start = LOADADDR (.data)
-                0x000020c6                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x008005fd                PROVIDE (__bss_end, .)
+                0x000020b6                __data_load_start = LOADADDR (.data)
+                0x00002198                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x008005e0        0x0
+.noinit         0x008005fd        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x008005e0                _end = .
+                0x008005fd                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
@@ -807,7 +807,7 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000      0x2b0
+.debug_aranges  0x00000000      0x2c0
  *(.debug_aranges)
  .debug_aranges
                 0x00000000       0x48 adc.o
@@ -820,34 +820,34 @@ END GROUP
  .debug_aranges
                 0x00000150       0x28 main.o
  .debug_aranges
-                0x00000178       0x50 menu.o
+                0x00000178       0x58 menu.o
  .debug_aranges
-                0x000001c8       0x40 motor.o
+                0x000001d0       0x40 motor.o
  .debug_aranges
-                0x00000208       0x38 SSD1306.o
+                0x00000210       0x38 SSD1306.o
  .debug_aranges
-                0x00000240       0x48 stepper.o
+                0x00000248       0x50 stepper.o
  .debug_aranges
-                0x00000288       0x28 timer.o
+                0x00000298       0x28 timer.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x4e12
+.debug_info     0x00000000     0x50b0
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0xb70 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/at90usb1287/avr51/crtat90usb1287.o
  .debug_info    0x00000b70      0x94b adc.o
- .debug_info    0x000014bb      0x2d8 extInt.o
- .debug_info    0x00001793      0xfc2 Framebuffer.o
- .debug_info    0x00002755      0x244 I2C.o
- .debug_info    0x00002999      0x915 main.o
- .debug_info    0x000032ae      0xeb0 menu.o
- .debug_info    0x0000415e       0xf8 motor.o
- .debug_info    0x00004256      0x7a4 SSD1306.o
- .debug_info    0x000049fa      0x367 stepper.o
- .debug_info    0x00004d61       0xb1 timer.o
+ .debug_info    0x000014bb      0x2c6 extInt.o
+ .debug_info    0x00001781      0xfc2 Framebuffer.o
+ .debug_info    0x00002743      0x244 I2C.o
+ .debug_info    0x00002987      0x967 main.o
+ .debug_info    0x000032ee      0xf1d menu.o
+ .debug_info    0x0000420b       0xf8 motor.o
+ .debug_info    0x00004303      0x7a4 SSD1306.o
+ .debug_info    0x00004aa7      0x558 stepper.o
+ .debug_info    0x00004fff       0xb1 timer.o
 
-.debug_abbrev   0x00000000     0x1a48
+.debug_abbrev   0x00000000     0x1a73
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0xad2 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/at90usb1287/avr51/crtat90usb1287.o
  .debug_abbrev  0x00000ad2      0x216 adc.o
@@ -858,71 +858,71 @@ END GROUP
  .debug_abbrev  0x00001432      0x1b7 menu.o
  .debug_abbrev  0x000015e9       0x6f motor.o
  .debug_abbrev  0x00001658      0x211 SSD1306.o
- .debug_abbrev  0x00001869      0x163 stepper.o
- .debug_abbrev  0x000019cc       0x7c timer.o
+ .debug_abbrev  0x00001869      0x18e stepper.o
+ .debug_abbrev  0x000019f7       0x7c timer.o
 
-.debug_line     0x00000000     0x181d
+.debug_line     0x00000000     0x19bd
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x17b C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/at90usb1287/avr51/crtat90usb1287.o
- .debug_line    0x0000017b      0x251 adc.o
- .debug_line    0x000003cc      0x1b9 extInt.o
- .debug_line    0x00000585      0x47e Framebuffer.o
- .debug_line    0x00000a03      0x188 I2C.o
- .debug_line    0x00000b8b      0x397 main.o
- .debug_line    0x00000f22      0x2b2 menu.o
- .debug_line    0x000011d4       0xc8 motor.o
- .debug_line    0x0000129c      0x21f SSD1306.o
- .debug_line    0x000014bb      0x2d6 stepper.o
- .debug_line    0x00001791       0x8c timer.o
+ .debug_line    0x0000017b      0x24b adc.o
+ .debug_line    0x000003c6      0x1d1 extInt.o
+ .debug_line    0x00000597      0x47e Framebuffer.o
+ .debug_line    0x00000a15      0x188 I2C.o
+ .debug_line    0x00000b9d      0x3c8 main.o
+ .debug_line    0x00000f65      0x2c8 menu.o
+ .debug_line    0x0000122d       0xc8 motor.o
+ .debug_line    0x000012f5      0x21f SSD1306.o
+ .debug_line    0x00001514      0x41d stepper.o
+ .debug_line    0x00001931       0x8c timer.o
 
-.debug_frame    0x00000000      0x828
+.debug_frame    0x00000000      0x830
  *(.debug_frame)
  .debug_frame   0x00000000       0xa8 adc.o
  .debug_frame   0x000000a8       0xf4 extInt.o
  .debug_frame   0x0000019c      0x324 Framebuffer.o
  .debug_frame   0x000004c0       0x64 I2C.o
  .debug_frame   0x00000524       0x34 main.o
- .debug_frame   0x00000558       0xc8 menu.o
- .debug_frame   0x00000620       0x64 motor.o
- .debug_frame   0x00000684       0x98 SSD1306.o
- .debug_frame   0x0000071c       0xd8 stepper.o
- .debug_frame   0x000007f4       0x34 timer.o
+ .debug_frame   0x00000558       0xc0 menu.o
+ .debug_frame   0x00000618       0x64 motor.o
+ .debug_frame   0x0000067c       0x98 SSD1306.o
+ .debug_frame   0x00000714       0xe8 stepper.o
+ .debug_frame   0x000007fc       0x34 timer.o
 
-.debug_str      0x00000000     0x1084
+.debug_str      0x00000000     0x1136
  *(.debug_str)
  .debug_str     0x00000000      0x3f7 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/at90usb1287/avr51/crtat90usb1287.o
  .debug_str     0x000003f7      0x620 adc.o
                                 0x674 (size before relaxing)
- .debug_str     0x00000a17      0x137 extInt.o
-                                0x312 (size before relaxing)
- .debug_str     0x00000b4e       0xfe Framebuffer.o
+ .debug_str     0x00000a17      0x12a extInt.o
+                                0x305 (size before relaxing)
+ .debug_str     0x00000b41       0xfe Framebuffer.o
                                 0x635 (size before relaxing)
- .debug_str     0x00000c4c       0x6b I2C.o
+ .debug_str     0x00000c3f       0x6b I2C.o
                                 0x240 (size before relaxing)
- .debug_str     0x00000cb7      0x222 main.o
-                                0x86b (size before relaxing)
- .debug_str     0x00000ed9       0x36 menu.o
-                                0x6a3 (size before relaxing)
- .debug_str     0x00000f0f       0x34 motor.o
+ .debug_str     0x00000caa      0x23a main.o
+                                0x847 (size before relaxing)
+ .debug_str     0x00000ee4       0x36 menu.o
+                                0x6bb (size before relaxing)
+ .debug_str     0x00000f1a       0x34 motor.o
                                 0x23f (size before relaxing)
- .debug_str     0x00000f43       0x45 SSD1306.o
+ .debug_str     0x00000f4e       0x45 SSD1306.o
                                 0x319 (size before relaxing)
- .debug_str     0x00000f88       0xe7 stepper.o
-                                0x362 (size before relaxing)
- .debug_str     0x0000106f       0x15 timer.o
-                                0x1d8 (size before relaxing)
+ .debug_str     0x00000f93      0x18e stepper.o
+                                0x453 (size before relaxing)
+ .debug_str     0x00001121       0x15 timer.o
+                                0x1bf (size before relaxing)
 
-.debug_loc      0x00000000     0x228a
+.debug_loc      0x00000000     0x22ca
  *(.debug_loc)
  .debug_loc     0x00000000       0xe2 adc.o
  .debug_loc     0x000000e2      0x22b extInt.o
  .debug_loc     0x0000030d     0x16de Framebuffer.o
  .debug_loc     0x000019eb       0x9e I2C.o
- .debug_loc     0x00001a89      0x108 main.o
- .debug_loc     0x00001b91      0x105 menu.o
- .debug_loc     0x00001c96      0x2c6 SSD1306.o
- .debug_loc     0x00001f5c      0x2e2 stepper.o
- .debug_loc     0x0000223e       0x4c timer.o
+ .debug_loc     0x00001a89      0x157 main.o
+ .debug_loc     0x00001be0       0xa7 menu.o
+ .debug_loc     0x00001c87      0x2c6 SSD1306.o
+ .debug_loc     0x00001f4d      0x331 stepper.o
+ .debug_loc     0x0000227e       0x4c timer.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -942,18 +942,18 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000      0x278
+.debug_ranges   0x00000000      0x288
  *(.debug_ranges)
  .debug_ranges  0x00000000       0x38 adc.o
  .debug_ranges  0x00000038       0x28 extInt.o
  .debug_ranges  0x00000060       0xe8 Framebuffer.o
  .debug_ranges  0x00000148       0x30 I2C.o
  .debug_ranges  0x00000178       0x18 main.o
- .debug_ranges  0x00000190       0x40 menu.o
- .debug_ranges  0x000001d0       0x30 motor.o
- .debug_ranges  0x00000200       0x28 SSD1306.o
- .debug_ranges  0x00000228       0x38 stepper.o
- .debug_ranges  0x00000260       0x18 timer.o
+ .debug_ranges  0x00000190       0x48 menu.o
+ .debug_ranges  0x000001d8       0x30 motor.o
+ .debug_ranges  0x00000208       0x28 SSD1306.o
+ .debug_ranges  0x00000230       0x40 stepper.o
+ .debug_ranges  0x00000270       0x18 timer.o
 
 .debug_macro
  *(.debug_macro)

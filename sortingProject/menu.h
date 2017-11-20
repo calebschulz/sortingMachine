@@ -11,17 +11,24 @@
 
 #define MENU_START 0
 #define MENU_CALIBRATION 1
-#define MENU_STEPPER 2
+#define MENU_HOME 2
 #define MENU_OPTICALS 3
+#define MENU_STEPPER 4
+
+#define MENU_ACEL 3
+#define MENU_MAX_DELAY 2
+#define MENU_MIN_DELAY 1
+#define MENU_ACEL_STEPS 0
 
 void menu1Start();
 void menu1Calibration();
+void menu2Home();
 void menu2Stepper();
 void menu2Refl();
 void menuDebugQ();
 void menuDebugS();
 void menuDisplayItemCount();
-
-
+void menu3Display(unsigned char);
+void menu3Running();
 
 #endif /* MENU_H_ */

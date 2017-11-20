@@ -33,10 +33,6 @@ extern volatile unsigned char debugCount;
 extern volatile char frontOfQueue;
 extern volatile char backOfQueue;
 extern volatile unsigned char delayStepper;
-extern volatile unsigned char blackCount;
-extern volatile unsigned char whiteCount;
-extern volatile unsigned char steelCount;
-extern volatile unsigned char aluminumCount;
 
 
 Framebuffer myDisplay;
@@ -50,8 +46,9 @@ int main(void)
 	CLKPR = _BV(CLKPCE);
 	CLKPR = 0;
 	
-	//pin 6 for stepper calibration pin
-	DDRE &= 0x0f; 
+	//pin 6 input for stepper calibration pin
+	DDRE &= 0x0e; 
+	//Leds output
 	DDRC |= 0xff;
 	//Joystick input w/ pullup up(pin7) left(pin6) select(pin5) 
 	DDRB &= ~JS_UP_PIN & ~JS_LEFT_PIN & ~JS_SELECT_PIN; 
@@ -68,8 +65,8 @@ int main(void)
 	initStepper();
 	
 	motorBrake();
-	motorSpeed(0x80);
-	PORTC=0xf;
+	motorSpeed(0xb0);
+
 	/*//Manual Optical sensor calibration
 		static unsigned int min = 1023;
 		sei();
@@ -87,35 +84,6 @@ int main(void)
 				min = 1023;
 			}
 		}*/
-	/*//Stepper test loop for delay 
-	homeStepper();
-	startStepper();
-	stepGoalPosition = 0;
-	sei();
-	while(1){
-		//rotateStepperToGoal();
-		if((PINE & JS_DOWN_PIN) == 0){
-			mTimer(20);
-			while((PINE & JS_DOWN_PIN) == 0){};
-			mTimer(20);
-			stepGoalPosition -=50;
-			if(stepGoalPosition < 0){
-				stepGoalPosition = 150;
-			}
-		}
-		//If Joystick Up -> highlight Start
-		if((PINB & JS_UP_PIN) == 0){
-			mTimer(20);
-			while((PINB & JS_UP_PIN) == 0){};
-			mTimer(20);
-			stepGoalPosition +=50;
-			if(stepGoalPosition > 199){
-				stepGoalPosition = 0;
-			}
-		}
-		
-		menuDebugS();
-	}*/
 	
 	
 	////////MENU SCREEN 1
@@ -152,21 +120,35 @@ int main(void)
 
 	//////////CALIBRATION LOOP SCREEN 2
 	calibration:
-	menuSelector = MENU_STEPPER;
-	menu2Stepper();
+	menuSelector = MENU_HOME;
+	menu2Home();
 	while(1){
 		//If Joystick down -> highlight Optical S
-		if((PINE & JS_DOWN_PIN) == 0){
+		if((PINE & JS_DOWN_PIN) == 0 && menuSelector == MENU_STEPPER){
 			menu2Refl();
 			menuSelector = MENU_OPTICALS;
 		}
-		//If Joystick Up -> highlight Stepper
-		if((PINB & JS_UP_PIN) == 0){
+		else if((PINE & JS_DOWN_PIN) == 0 && menuSelector == MENU_HOME){
+			mTimer(20);
+			while((PINE & JS_DOWN_PIN) == 0){};
+			mTimer(20);
 			menu2Stepper();
 			menuSelector = MENU_STEPPER;
 		}
-		if((PINB & JS_LEFT_PIN) == 0){
-			goto menu;
+		//If Joystick Up -> highlight Stepper
+		else if((PINB & JS_UP_PIN) == 0 && menuSelector == MENU_OPTICALS){
+			mTimer(20);
+			while((PINB & JS_UP_PIN) == 0){};
+			mTimer(20);
+			menu2Stepper();
+			menuSelector = MENU_STEPPER;
+		}
+		else if((PINB & JS_UP_PIN) == 0 && menuSelector == MENU_STEPPER){
+			menu2Home();
+			menuSelector = MENU_HOME;
+		}
+		else if((PINB & JS_LEFT_PIN) == 0){
+			goto calibration;
 		}
 		//If Joystick select -> run currently selected option
 		if((PINB & JS_SELECT_PIN) == 0){
@@ -184,14 +166,18 @@ int main(void)
 						mTimer(20);
 						while((PINB & JS_SELECT_PIN) == 0){};
 						mTimer(20);
-						goto menu;
+						goto calibration;
 					}
 				}
 				
 			}
-			else{
+			else if(MENU_HOME){
 				homeStepper();
 				goto menu;
+			}
+			else if (MENU_STEPPER){
+				
+				goto calibration;
 			}
 		}
 	}
@@ -202,6 +188,12 @@ int main(void)
 	while(1){
 		if((PINB & JS_LEFT_PIN) == 0){
 			goto mainLoop;
+		}
+		else if(JS_UP_PRESSED){
+			menuDebugQ();
+		}
+		else if(JS_DOWN_PRESSED){
+			menuDisplayItemCount();
 		}
 	}
 		

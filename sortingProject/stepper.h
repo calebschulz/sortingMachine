@@ -2,7 +2,7 @@
 #define NUMBER_STEPS_DECELERATION 11
 #define MAX_STEPPER_DELAY 112 //1 ms = 7.8125~8 -> 18ms ~ 144  //1ms = 31.25 , 
 #define MIN_STEPPER_DELAY 73 //8 ms
-#define STEPPER_MOVE_DELAY 20
+#define STEPPER_MOVE_DELAY 50
 #define STEPPER_POSITION_OFFSET 0
 #define STEPPER_HOME_PIN 0b01000000
 #define STEPPER_DELAY_REGISTER OCR3A
@@ -18,3 +18,4 @@ void homeStepper();
 void startStepper();
 void rotateStepper(int numSteps, int directionCW);
 void rotateStepperToGoal();
+void stepperCalibration();

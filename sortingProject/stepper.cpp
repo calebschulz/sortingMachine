@@ -1,11 +1,14 @@
-#include "stepper.h"
-#include "motor.h"
-#include "timer.h"
-#include "extInt.h"
 #include <stdlib.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <stdlib.h>
+#include "stepper.h"
+#include "motor.h"
+#include "timer.h"
+#include "extInt.h"
+#include "adc.h"
+#include "menu.h"
+#include "GPIO.h"
 
 //Globals
 volatile unsigned char stepperDelay = MAX_STEPPER_DELAY;
@@ -25,6 +28,10 @@ extern volatile unsigned char reflQueue[];
 extern unsigned char deQueue;
 extern volatile char frontOfQueue;
 extern volatile unsigned char backOfQueue;
+extern volatile unsigned char blackCount;
+extern volatile unsigned char whiteCount;
+extern volatile unsigned char steelCount;
+extern volatile unsigned char aluminumCount;
 
 void initStepper(void){
 	//PA5-0 output for stepper control lines
@@ -93,7 +100,6 @@ void rotateStepper(int numSteps, int directionCW){
 			
 		}
 		PORTA = (PORTA & 0b11000000) | stepArray[stepAPosition];
-		//PORTC = stepArray[stepAPosition];
 
 		//Acceleration/deceleration handling
 		if(i < 10){
@@ -133,6 +139,79 @@ void rotateStepperToGoal(){
 	}
 }
 
+void stepperCalibration(){
+	unsigned char menuSelection;
+	//Stepper test loop for delay 
+	stepperSettings:
+	menuSelection = 0;
+	menu3Display(menuSelection);
+	while(1){
+		if(JS_UP_PRESSED){
+			mTimer(BUTTON_DEBOUNCE_DELAY);
+			while(JS_UP_PRESSED){};
+			mTimer(BUTTON_DEBOUNCE_DELAY);	
+			menuSelection = (menuSelection+1)&3;
+		}
+		else if(JS_DOWN_PRESSED){
+			mTimer(BUTTON_DEBOUNCE_DELAY);
+			while(JS_DOWN_PRESSED){};
+			mTimer(BUTTON_DEBOUNCE_DELAY);
+			menuSelection = (menuSelection-1)&3;
+		}
+		else if(JS_SELECT_PRESSED){
+			mTimer(BUTTON_DEBOUNCE_DELAY);
+			while(JS_SELECT_PRESSED){};
+			mTimer(BUTTON_DEBOUNCE_DELAY);
+			goto valueSelection;
+		}
+		menu3Display(menuSelection);
+		if(JS_RIGHT_PRESSED){
+			goto startStepperTest;
+		}
+	}
+	valueSelection:
+	//Change from ADC1 to ADC 2 *** must change back
+	ADMUX = (ADMUX & _BV(MUX0)) | _BV(MUX1);
+	
+	while(1){
+		
+	}
+	
+	startStepperTest:
+	menu3Running();
+	homeStepper();
+	startStepper();
+	stepGoalPosition = 0;
+	sei();
+	while(1){
+		//rotateStepperToGoal();
+		if((PINE & JS_DOWN_PIN) == 0){
+			mTimer(20);
+			while((PINE & JS_DOWN_PIN) == 0){};
+			mTimer(20);
+			stepGoalPosition -=50;
+			if(stepGoalPosition < 0){
+				stepGoalPosition = 150;
+			}
+		}
+		//If Joystick Up -> highlight Start
+		if((PINB & JS_UP_PIN) == 0){
+			mTimer(20);
+			while((PINB & JS_UP_PIN) == 0){};
+			mTimer(20);
+			stepGoalPosition +=50;
+			if(stepGoalPosition > 199){
+				stepGoalPosition = 0;
+			}
+		}
+		if((JS_LEFT_PORT & JS_LEFT_PIN) == 0){
+			cli();
+			goto stepperSettings;
+		}
+		menuDebugS();
+	}
+}
+
 ISR(TIMER0_COMPA_vect){
 	
 	unsigned char nextItem = 0;
@@ -146,7 +225,6 @@ ISR(TIMER0_COMPA_vect){
 
 	//////////PLACE BLOCK INTO BIN ONCE CLOSE ENOUGH
 	if(shortAbsDifference < CLOSE_ENOUGH){
-		PORTC |= 8;
 		if(blockReady){
 			//////////MOTOR ON
 			MOTOR_PORT = (MOTOR_PORT & ~MOTOR_PINS) | MOTOR_FORWARD;
@@ -157,7 +235,6 @@ ISR(TIMER0_COMPA_vect){
 			stepperReady = 1;
 		}
 		else if(difference == 0){
-			PORTC |= 0x10;
 			//Stepper Dequeue is ready and we have arrived at goal
 			//////////COUNT NUMBER OF EACH SORTED
 			if(reflQueue[frontOfQueue] == BLACK){
@@ -209,7 +286,6 @@ ISR(TIMER0_COMPA_vect){
 	}
 
 	PORTA = (PORTA & 0b11000000) | stepArray[stepAPosition];
-	//PORTC = stepArray[stepAPosition];
 
 	//////////ACCELERATION/DECELERATION ***
 	if(shortAbsDifference > 30 && stepperDelay > MIN_STEPPER_DELAY){

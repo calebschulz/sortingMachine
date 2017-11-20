@@ -27,10 +27,10 @@ volatile char reflQueueChange = 0;
 volatile unsigned char reflInARow = 0;
 volatile unsigned char risingEdge = 1;
 volatile unsigned char debugCount=0;
-volatile unsigned int blackMinRef = 931; //Min value read minus 5
-volatile unsigned int whiteMinRef = 913;
-volatile unsigned int steelMinRef = 509;
-volatile unsigned int aluminumMinRef = 65;
+volatile unsigned int blackMinRef = 929; //Min value read minus 5
+volatile unsigned int whiteMinRef = 880;
+volatile unsigned int steelMinRef = 420;
+volatile unsigned int aluminumMinRef = 20;
 volatile unsigned char blackCount = 0;
 volatile unsigned char whiteCount = 0;
 volatile unsigned char steelCount = 0;
@@ -76,13 +76,12 @@ void initExtInt(void){
 	more rubust.
 */
 ISR(INT2_vect){
-	//Debounce
-	mTimer(5);
+	//////////"Debounce" *** seems to work fine with 1 ms delay
+	mTimer(1);
 	//////////
 	
 	//if(REF_SENSOR_PORT & REF_SENSOR_PIN){
 	if(PIND & 0x4){
-		PORTC |= 0x1;
 		//////////START ADC
 		lowestRefl = 1023;
 		//Enable ADC interrupt
@@ -92,7 +91,6 @@ ISR(INT2_vect){
 		
 	}
 	else if((PIND & 0x4) == 0){
-		PORTC |= 4;
 		char unsigned itemValue = 0;
 		//////////STOP ADC
 		//Disable ADC interrupt
@@ -120,7 +118,7 @@ ISR(INT2_vect){
 		//////////ADD BLOCK TO QUEUE
 		//Check to make sure we aren't passed max
 		if(reflQueueCount > 7){ 
-			PORTC = 0xf0;
+			PORTC = 0xff;
 		}
 		else if(reflQueueCount == 0){
 			reflQueueCount++;
@@ -143,10 +141,9 @@ ISR(INT2_vect){
 
 ISR(INT3_vect){
 	char nextItem = 0;
-	//////////Debounce *** possibly can remove
-	mTimer(5);
-	//***
-	PORTC++;
+	//////////"Debounce" *** seems to work fine with 1 ms delay
+	mTimer(1);
+
 	if((PIND & 0x8) == 0){
 		
 		if(stepperReady){

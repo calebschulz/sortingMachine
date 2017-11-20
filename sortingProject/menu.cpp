@@ -39,20 +39,25 @@ void menu1Calibration(){
 	myDisplay.drawString(0,36,">Calibrate");
 	myDisplay.show();
 }
+void menu2Home(){
+	myDisplay.clear();
+	myDisplay.drawString(0,0,">Home Step");
+	myDisplay.drawString(0,16," Stepper");
+	myDisplay.drawString(0,32," Optical S");
+	myDisplay.show();
+}
 void menu2Stepper(){
 	myDisplay.clear();
-	myDisplay.drawString(0,0,"Calibrate");
-	myDisplay.drawRectangle(0,16,127,17,1);
-	myDisplay.drawString(0,20,">Stepper");
-	myDisplay.drawString(0,36," Optical S");
+	myDisplay.drawString(0,0," Home Step");
+	myDisplay.drawString(0,16,">Stepper");
+	myDisplay.drawString(0,32," Optical S");
 	myDisplay.show();
 }
 void menu2Refl(){
 	myDisplay.clear();
-	myDisplay.drawString(0,0,"Calibrate");
-	myDisplay.drawRectangle(0,16,127,17,1);
-	myDisplay.drawString(0,20," Stepper");
-	myDisplay.drawString(0,36,">Optical S");
+	myDisplay.drawString(0,0," Home Step");
+	myDisplay.drawString(0,16," Stepper");
+	myDisplay.drawString(0,32,">Optical S");
 	myDisplay.show();
 }
 
@@ -93,11 +98,11 @@ void menuDisplayItemCount(){
 	myDisplay.drawString(column(1),row(2),"Sorted:");
 	myDisplay.drawString(column(1),row(3),"B=");
 	myDisplay.drawNumber(column(3),row(3),blackCount);
-	myDisplay.drawString(column(6),row(3),"W:");
+	myDisplay.drawString(column(6),row(3),"W=");
 	myDisplay.drawNumber(column(8),row(3),whiteCount);
-	myDisplay.drawString(column(1),row(4),"S:");
+	myDisplay.drawString(column(1),row(4),"S=");
 	myDisplay.drawNumber(column(3),row(4),steelCount);
-	myDisplay.drawString(column(6),row(4),"A:");
+	myDisplay.drawString(column(6),row(4),"A=");
 	myDisplay.drawNumber(column(8),row(4),aluminumCount);
 	myDisplay.show();
 }
