@@ -19,6 +19,9 @@ extern volatile char stepperReady;
 extern volatile unsigned int lowestRefl;
 extern unsigned char deQueue;
 extern unsigned char delayStepper;
+extern volatile unsigned int adcAverage;
+extern volatile unsigned char adcTotalCount;
+
 volatile unsigned char reflQueue[8];
 volatile unsigned char reflQueueCount = 0;
 volatile char frontOfQueue = 0;
@@ -26,11 +29,10 @@ volatile char backOfQueue = 0;
 volatile char reflQueueChange = 0;
 volatile unsigned char reflInARow = 0;
 volatile unsigned char risingEdge = 1;
-volatile unsigned char debugCount=0;
-volatile unsigned int blackMinRef = 929; //Min value read minus 5
-volatile unsigned int whiteMinRef = 880;
-volatile unsigned int steelMinRef = 420;
-volatile unsigned int aluminumMinRef = 20;
+volatile unsigned int blackMinRef = 880; //Min value read minus 5
+volatile unsigned int whiteMinRef = 775;
+volatile unsigned int steelMinRef = 190;
+volatile unsigned int aluminumMinRef = 30;
 volatile unsigned char blackCount = 0;
 volatile unsigned char whiteCount = 0;
 volatile unsigned char steelCount = 0;
@@ -77,13 +79,16 @@ void initExtInt(void){
 */
 ISR(INT2_vect){
 	//////////"Debounce" *** seems to work fine with 1 ms delay
-	mTimer(1);
+	mTimer(5);
 	//////////
 	
 	//if(REF_SENSOR_PORT & REF_SENSOR_PIN){
 	if(PIND & 0x4){
 		//////////START ADC
 		lowestRefl = 1023;
+		//adcTotalCount = 0;
+		//adcAverage = 0;
+		//runningSum
 		//Enable ADC interrupt
 		ADCSRA |= _BV(ADIE);
 		//Start ADC conversion
@@ -142,40 +147,40 @@ ISR(INT2_vect){
 ISR(INT3_vect){
 	char nextItem = 0;
 	//////////"Debounce" *** seems to work fine with 1 ms delay
-	mTimer(1);
+	mTimer(5);
 
 	if((PIND & 0x8) == 0){
-		
 		if(stepperReady){
 			//////////PUT BLOCK IN BIN (leave motor on) 
 			
-				//////////COUNT NUMBER OF EACH SORTED
-				if(reflQueue[frontOfQueue] == BLACK){
-					blackCount++;
-				}
-				else if(reflQueue[frontOfQueue] == WHITE){
-					whiteCount++;
-				}
-				else if(reflQueue[frontOfQueue] == STEEL){
-					steelCount++;
-				}
-				else if(reflQueue[frontOfQueue] == ALUMINUM){
-					aluminumCount++;
-				}
+			//////////COUNT NUMBER OF EACH SORTED
+			if(reflQueue[frontOfQueue] == BLACK){
+				blackCount++;
+			}
+			else if(reflQueue[frontOfQueue] == WHITE){
+				whiteCount++;
+			}
+			else if(reflQueue[frontOfQueue] == STEEL){
+				steelCount++;
+			}
+			else if(reflQueue[frontOfQueue] == ALUMINUM){
+				aluminumCount++;
+			}
 
-				//////////DEQUEUE BLOCK
-				if(reflQueueCount < 2){
-					reflQueueCount = 0;
+			//////////DEQUEUE BLOCK
+			if(reflQueueCount < 2){
+				reflQueueCount = 0;
+			}
+			else{
+				nextItem = (frontOfQueue+1) & 7; //& 7 implements a rotating array position
+				if(reflQueue[frontOfQueue] != reflQueue[nextItem]){
+					delayStepper = 1;
+					stepperReady = 0;
 				}
-				else{
-					nextItem = (frontOfQueue+1) & 7; //& 7 implements a rotating array position
-					if(reflQueue[frontOfQueue] != reflQueue[nextItem]){
-						delayStepper = 1;
-					}
-					frontOfQueue = nextItem; 
-					reflQueueCount--;
-					reflQueueChange = 1;
-				}
+				frontOfQueue = nextItem; 
+				reflQueueCount--;
+				reflQueueChange = 1;
+			}
 		}
 		else{
 			//Motor brake

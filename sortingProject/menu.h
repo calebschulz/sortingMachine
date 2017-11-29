@@ -30,5 +30,6 @@ void menuDebugS();
 void menuDisplayItemCount();
 void menu3Display(unsigned char);
 void menu3Running();
+void menu3ValueSelection(unsigned char);
 
 #endif /* MENU_H_ */

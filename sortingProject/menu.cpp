@@ -21,6 +21,9 @@ extern volatile unsigned char blackCount;
 extern volatile unsigned char whiteCount;
 extern volatile unsigned char steelCount;
 extern volatile unsigned char aluminumCount;
+extern volatile unsigned int debugCount;
+extern volatile unsigned int adcAverage;
+extern volatile unsigned char adcTotalCount;
 
 void menu1Start(){
 	myDisplay.clear();
@@ -64,9 +67,10 @@ void menu2Refl(){
 void menuDebugQ(){
 	myDisplay.clear();
 	myDisplay.drawString(0,0,"Queue");
-	myDisplay.drawNumber(72,0,lowestRefl);
+	//myDisplay.drawNumber(0,0,adcAverage);//lowestRefl); ****
+	myDisplay.drawNumber(72,0,lowestRefl); 
 	myDisplay.drawRectangle(0,16,127,17,1);
-	myDisplay.drawNumber(0,20,reflQueue[0]);
+	myDisplay.drawNumber(0,20,reflQueue[0]); 
 	myDisplay.drawNumber(12,20,reflQueue[1]);
 	myDisplay.drawNumber(24,20,reflQueue[2]);
 	myDisplay.drawNumber(36,20,reflQueue[3]);
@@ -95,7 +99,8 @@ void menuDisplayItemCount(){
 	myDisplay.clear();
 	myDisplay.drawString(column(1),row(1),"On Belt:");
 	myDisplay.drawNumber(column(9),row(1),reflQueueCount);
-	myDisplay.drawString(column(1),row(2),"Sorted:");
+	myDisplay.drawString(column(1),row(2),"TSorted:");
+	myDisplay.drawNumber(column(9),row(2),(reflQueueCount+blackCount+whiteCount+steelCount+aluminumCount));
 	myDisplay.drawString(column(1),row(3),"B=");
 	myDisplay.drawNumber(column(3),row(3),blackCount);
 	myDisplay.drawString(column(6),row(3),"W=");

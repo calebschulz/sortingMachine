@@ -172,9 +172,31 @@ void stepperCalibration(){
 	valueSelection:
 	//Change from ADC1 to ADC 2 *** must change back
 	ADMUX = (ADMUX & _BV(MUX0)) | _BV(MUX1);
+	//Disable ADC interrupt
+	ADCSRA &= ~_BV(ADIE);
+	//Start ADC conversion
+	ADCSRA |= _BV(ADSC);
+	//Left shifted
+	ADMUX |= _BV(ADLAR);
 	
+	menuSelection = 0;
+	menu3ValueSelection(menuSelection);
 	while(1){
-		
+// 		if(ADCSRA & _BV(ADSC)){
+// 			
+// 		}
+// 		else{
+// 			if(adcTotalCount < 8){
+// 			 	adcAverage = adcAverage + ADCH - (adcAverage >> 3); //MA[n]* = MA[n-1]* + x[n] - MA[n-1]*/N
+// 			 	adcTotalCount++;
+// 			 	//Start another ADC conversion
+// 			 	ADCSRA |= _BV(ADSC);
+// 			}
+// 			else{
+// 			 	adcAverage >>= 3;	//MA*/N
+// 				selectedValue = ADCH;
+// 			}
+// 		}
 	}
 	
 	startStepperTest:
@@ -223,19 +245,23 @@ ISR(TIMER0_COMPA_vect){
 		shortAbsDifference = 200 - shortAbsDifference;
 	}
 
+/*
+	if close enough
+		if blockready 
+			turn motor on
+			dequeue
+			queue change
+			if current != next
+				delay
+		else
+			stepper ready
+*/
 	//////////PLACE BLOCK INTO BIN ONCE CLOSE ENOUGH
 	if(shortAbsDifference < CLOSE_ENOUGH){
 		if(blockReady){
 			//////////MOTOR ON
 			MOTOR_PORT = (MOTOR_PORT & ~MOTOR_PINS) | MOTOR_FORWARD;
-			sDequeueRdy = 1;
 			blockReady = 0;
-		} 
-		else if(!sDequeueRdy){
-			stepperReady = 1;
-		}
-		else if(difference == 0){
-			//Stepper Dequeue is ready and we have arrived at goal
 			//////////COUNT NUMBER OF EACH SORTED
 			if(reflQueue[frontOfQueue] == BLACK){
 				blackCount++;
@@ -258,11 +284,16 @@ ISR(TIMER0_COMPA_vect){
 				if(reflQueue[frontOfQueue] != reflQueue[nextItem]){
 					delayStepper = 1;
 				}
+				else{
+					stepperReady = 1; //***redundant?
+				}
 				frontOfQueue = nextItem; //& 7 implements a rotating array pointer
 				reflQueueCount--;
 				reflQueueChange = 1;
 			}
-			sDequeueRdy = 0;	
+		} 
+		else{
+			stepperReady = 1;
 		}
 	}
 	else{
@@ -274,7 +305,7 @@ ISR(TIMER0_COMPA_vect){
 		if(stepCurrentPosition > 199){
 			stepCurrentPosition = 0;
 		}
-		stepAPosition = (stepAPosition + 1) & 3; //& 3 is a bitwise %4, creates a circular loop through stepArray	
+		stepAPosition = (stepAPosition + 1) & 3; //& 3 is a bitwise version of %4, creates a circular loop through stepArray	
 	}
 	else if(((difference < 0) && (difference >= -100)) || (difference >= 100)){
 		stepCurrentPosition--;
@@ -296,6 +327,6 @@ ISR(TIMER0_COMPA_vect){
 	}
 	//Set the initial value of the timer counter to 0
 	TCNT0 = 0x0;
-	//Sets stepper delay to max value
+	//Sets delay till next step
 	OCR0A = stepperDelay;
 }

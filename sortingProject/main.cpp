@@ -29,7 +29,6 @@ extern volatile unsigned char reflInARow;
 extern volatile int stepCurrentPosition; //*** debug
 extern volatile int stepGoalPosition;
 extern volatile unsigned int lowestRefl;
-extern volatile unsigned char debugCount;
 extern volatile char frontOfQueue;
 extern volatile char backOfQueue;
 extern volatile unsigned char delayStepper;
@@ -37,8 +36,7 @@ extern volatile unsigned char delayStepper;
 
 Framebuffer myDisplay;
 
-int main(void)
-{
+int main(void){
 	unsigned char menuSelector = 0;
 	
 	cli(); //Ensure interrupts are turned off
@@ -65,7 +63,7 @@ int main(void)
 	initStepper();
 	
 	motorBrake();
-	motorSpeed(0xb0);
+	motorSpeed(0xaf);
 
 	/*//Manual Optical sensor calibration
 		static unsigned int min = 1023;
@@ -148,7 +146,7 @@ int main(void)
 			menuSelector = MENU_HOME;
 		}
 		else if((PINB & JS_LEFT_PIN) == 0){
-			goto calibration;
+			goto menu;
 		}
 		//If Joystick select -> run currently selected option
 		if((PINB & JS_SELECT_PIN) == 0){
@@ -211,8 +209,8 @@ int main(void)
 		//while(1){};
 		if(reflQueueChange){
 			//turn off interrupts? ***
+			
 			cli();
-
 			if(delayStepper){
 				mTimer(STEPPER_MOVE_DELAY);
 				delayStepper = 0;

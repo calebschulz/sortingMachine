@@ -15,3 +15,4 @@ void startADC();
 void stopADC();
 void calibrateADC();
 void findLowestReading(const char * objectType);
+unsigned int findAverageReading(const char * objectType);
