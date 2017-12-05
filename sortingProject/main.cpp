@@ -213,17 +213,12 @@ int main(void){
 		//while(1){};
 		if(reflQueueChange){
 			//turn off interrupts? ***
-	
+			cli();
 			if(delayStepper){
-				if(delayStepper == 2){ //Delay from stepper ISR
-					mTimer(STEPPER_MOVE_DELAY);
-				}
-				else{
-					mTimer(STEPPER_MOVE_DELAY);
-				}
+				mTimer(STEPPER_MOVE_DELAY);
 				delayStepper = 0;
 			}	
-			cli();
+			
 			
 			if(reflQueue[frontOfQueue] == BLACK){
 				stepGoalPosition = STEPPER_BLACK_POSITION;

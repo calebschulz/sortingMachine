@@ -27,6 +27,8 @@ const char *valueLabel;
 volatile unsigned char stepperMaxDelay = MAX_STEPPER_DELAY;
 volatile unsigned char stepperMinDelay = MIN_STEPPER_DELAY;
 volatile unsigned char stepperAccelRate = STEPPER_ACCELERATION_RATE;
+volatile unsigned char waitToReachGoal = 0;
+
 
 extern volatile char blockReady;
 extern volatile char reflQueueCount;
@@ -299,7 +301,14 @@ ISR(TIMER0_COMPA_vect){
 */
 	//////////PLACE BLOCK INTO BIN ONCE CLOSE ENOUGH
 	if(shortAbsDifference < CLOSE_ENOUGH){
-		if(blockReady){
+		if(waitToReachGoal){
+			stepperReady = 0; //*** this may not be needed?
+			if(shortAbsDifference == 0){ //*** needs to be tested
+				waitToReachGoal = 0;
+				reflQueueChange = 1;
+			}
+		}
+		else if(blockReady){
 			//////////MOTOR ON
 			MOTOR_PORT = (MOTOR_PORT & ~MOTOR_PINS) | MOTOR_FORWARD;
 			blockReady = 0;
@@ -324,11 +333,10 @@ ISR(TIMER0_COMPA_vect){
 				nextItem = (frontOfQueue+1) & 7;
 				
 				if(reflQueue[frontOfQueue] != reflQueue[nextItem]){
-					stepperDelay = 2;
+					waitToReachGoal = 1;
 				}
 				frontOfQueue = nextItem; //& 7 implements a rotating array pointer
 				reflQueueCount--;
-				reflQueueChange = 1;
 			}
 		} 
 		else{
