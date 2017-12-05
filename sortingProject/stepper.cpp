@@ -20,6 +20,13 @@ const char stepArray[] = {0b110000, 0b000110, 0b101000, 0b000101};
 volatile unsigned char sDequeueRdy = 0;
 volatile unsigned char delayStepper = 0;
 volatile unsigned char shortPath;
+volatile unsigned char *calibSelectedValue;
+unsigned int adcEightAverage = 0;
+unsigned char adcEightCount = 0;
+const char *valueLabel;
+volatile unsigned char stepperMaxDelay = MAX_STEPPER_DELAY;
+volatile unsigned char stepperMinDelay = MIN_STEPPER_DELAY;
+volatile unsigned char stepperAccelRate = STEPPER_ACCELERATION_RATE;
 
 extern volatile char blockReady;
 extern volatile char reflQueueCount;
@@ -140,7 +147,7 @@ void rotateStepperToGoal(){
 }
 
 void stepperCalibration(){
-	unsigned char menuSelection;
+	char menuSelection;
 	//Stepper test loop for delay 
 	stepperSettings:
 	menuSelection = 0;
@@ -150,53 +157,87 @@ void stepperCalibration(){
 			mTimer(BUTTON_DEBOUNCE_DELAY);
 			while(JS_UP_PRESSED){};
 			mTimer(BUTTON_DEBOUNCE_DELAY);	
-			menuSelection = (menuSelection+1)&3;
+			if(menuSelection == 0){
+				menuSelection = 0;
+			}
+			else{
+				menuSelection--;
+			}
+			
+			
 		}
 		else if(JS_DOWN_PRESSED){
 			mTimer(BUTTON_DEBOUNCE_DELAY);
 			while(JS_DOWN_PRESSED){};
 			mTimer(BUTTON_DEBOUNCE_DELAY);
-			menuSelection = (menuSelection-1)&3;
+			menuSelection++;
+			if(menuSelection > 2){
+				menuSelection = 2;
+			}
 		}
 		else if(JS_SELECT_PRESSED){
 			mTimer(BUTTON_DEBOUNCE_DELAY);
 			while(JS_SELECT_PRESSED){};
 			mTimer(BUTTON_DEBOUNCE_DELAY);
+			if(menuSelection == 0){
+				valueLabel = "Max:";
+				calibSelectedValue = &stepperMaxDelay;
+			}
+			else if(menuSelection == 1){
+				valueLabel = "IncrValue";
+				calibSelectedValue = &stepperAccelRate;
+			}
+			else if(menuSelection == 2){
+				valueLabel = "Min:";
+				calibSelectedValue = &stepperMinDelay;
+			}
 			goto valueSelection;
 		}
-		menu3Display(menuSelection);
-		if(JS_RIGHT_PRESSED){
+		else if(JS_RIGHT_PRESSED){
 			goto startStepperTest;
 		}
+		menu3Display(menuSelection);
 	}
 	valueSelection:
 	//Change from ADC1 to ADC 2 *** must change back
-	ADMUX = (ADMUX & _BV(MUX0)) | _BV(MUX1);
-	//Disable ADC interrupt
-	ADCSRA &= ~_BV(ADIE);
-	//Start ADC conversion
-	ADCSRA |= _BV(ADSC);
+	ADMUX = (ADMUX & ~_BV(MUX0)) | _BV(MUX1);
 	//Left shifted
 	ADMUX |= _BV(ADLAR);
+	//Disable ADC interrupt
+	ADCSRA &= ~_BV(ADIE);
 	
 	menuSelection = 0;
-	menu3ValueSelection(menuSelection);
+	menuDisplayValue(*calibSelectedValue, valueLabel);
 	while(1){
-// 		if(ADCSRA & _BV(ADSC)){
-// 			
-// 		}
-// 		else{
-// 			if(adcTotalCount < 8){
-// 			 	adcAverage = adcAverage + ADCH - (adcAverage >> 3); //MA[n]* = MA[n-1]* + x[n] - MA[n-1]*/N
-// 			 	adcTotalCount++;
-// 			 	//Start another ADC conversion
-// 			 	ADCSRA |= _BV(ADSC);
-// 			}
-// 			else{
-// 			 	adcAverage >>= 3;	//MA*/N
-// 				selectedValue = ADCH;
-// 			}
-// 		}
+		//Start ADC conversion
+		ADCSRA |= _BV(ADSC);
+		while(ADCSRA & _BV(ADSC)){}; //wait for conversion to finish
+		
+		if(adcEightCount < 8){
+			adcEightAverage = adcEightAverage + ADCH - (adcEightAverage >> 3); //MA[n]* = MA[n-1]* + x[n] - MA[n-1]*/N
+			adcEightCount++;
+		}
+		else{
+			//adcEightAverage >>= 3;	//MA*/N
+			*calibSelectedValue = adcEightAverage >> 3;
+			menuDisplayValue(*calibSelectedValue, valueLabel);
+			
+			adcEightCount = 0;
+		}
+		if(JS_LEFT_PRESSED){
+			mTimer(BUTTON_DEBOUNCE_DELAY);
+			while(JS_LEFT_PRESSED){};
+			mTimer(BUTTON_DEBOUNCE_DELAY);
+			//Change back from ADC 2 to 1
+			ADMUX = (ADMUX & ~_BV(MUX1)) | _BV(MUX0);
+			//Turn off left shifted
+			ADMUX &= ~_BV(ADLAR);
+			//Reenable ADC interrupt
+			ADCSRA |= _BV(ADIE);
+			
+			goto stepperSettings;
+		}
+
 	}
 	
 	startStepperTest:
@@ -281,11 +322,9 @@ ISR(TIMER0_COMPA_vect){
 			}
 			else{
 				nextItem = (frontOfQueue+1) & 7;
+				
 				if(reflQueue[frontOfQueue] != reflQueue[nextItem]){
-					delayStepper = 1;
-				}
-				else{
-					stepperReady = 1; //***redundant?
+					stepperDelay = 2;
 				}
 				frontOfQueue = nextItem; //& 7 implements a rotating array pointer
 				reflQueueCount--;
@@ -319,11 +358,11 @@ ISR(TIMER0_COMPA_vect){
 	PORTA = (PORTA & 0b11000000) | stepArray[stepAPosition];
 
 	//////////ACCELERATION/DECELERATION ***
-	if(shortAbsDifference > 30 && stepperDelay > MIN_STEPPER_DELAY){
-		stepperDelay -= STEPPER_ACCELERATION_RATE; //+= ~ 1 ms
+	if(shortAbsDifference > 30 && stepperDelay > stepperMinDelay){//MIN_STEPPER_DELAY){
+		stepperDelay -= stepperAccelRate; // STEPPER_ACCELERATION_RATE; 
 	}
-	else if(shortAbsDifference < NUMBER_STEPS_DECELERATION && stepperDelay <= MAX_STEPPER_DELAY){
-		stepperDelay += STEPPER_ACCELERATION_RATE;
+	else if(shortAbsDifference < NUMBER_STEPS_DECELERATION && stepperDelay <= stepperMaxDelay){//MAX_STEPPER_DELAY){
+		stepperDelay += stepperAccelRate; //STEPPER_ACCELERATION_RATE;
 	}
 	//Set the initial value of the timer counter to 0
 	TCNT0 = 0x0;

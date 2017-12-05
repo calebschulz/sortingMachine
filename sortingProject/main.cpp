@@ -149,7 +149,10 @@ int main(void){
 			goto menu;
 		}
 		//If Joystick select -> run currently selected option
-		if((PINB & JS_SELECT_PIN) == 0){
+		else if((PINB & JS_SELECT_PIN) == 0){
+			mTimer(20);
+			while((PINB & JS_SELECT_PIN) == 0){};
+			mTimer(20);
 			if(menuSelector == MENU_OPTICALS){
 				calibrateADC();
 				//Reset Queue and front/back 
@@ -169,12 +172,13 @@ int main(void){
 				}
 				
 			}
-			else if(MENU_HOME){
+			else if(menuSelector == MENU_HOME){
 				homeStepper();
 				goto menu;
 			}
-			else if (MENU_STEPPER){
-				
+			else if(menuSelector == MENU_STEPPER){
+				PORTC = 1;
+				stepperCalibration();
 				goto calibration;
 			}
 		}
@@ -209,12 +213,17 @@ int main(void){
 		//while(1){};
 		if(reflQueueChange){
 			//turn off interrupts? ***
-			
-			cli();
+	
 			if(delayStepper){
-				mTimer(STEPPER_MOVE_DELAY);
+				if(delayStepper == 2){ //Delay from stepper ISR
+					mTimer(STEPPER_MOVE_DELAY);
+				}
+				else{
+					mTimer(STEPPER_MOVE_DELAY);
+				}
 				delayStepper = 0;
 			}	
+			cli();
 			
 			if(reflQueue[frontOfQueue] == BLACK){
 				stepGoalPosition = STEPPER_BLACK_POSITION;

@@ -111,3 +111,40 @@ void menuDisplayItemCount(){
 	myDisplay.drawNumber(column(8),row(4),aluminumCount);
 	myDisplay.show();
 }
+
+//Used to display one value
+void menuDisplayValue(unsigned char value, const char *label){
+	myDisplay.clear();
+	myDisplay.drawString(column(1),row(1),label);
+	myDisplay.drawNumber(column(1),row(2),value);
+	myDisplay.show();
+}
+
+void menu3Display(unsigned char display){
+	myDisplay.clear();
+	if(display == 0){
+		myDisplay.drawString(column(1),row(1),">Max");
+		myDisplay.drawString(column(1),row(2)," Inc");
+		myDisplay.drawString(column(1),row(3)," Min");
+	}
+	else if(display == 1){
+		myDisplay.drawString(column(1),row(1)," Max");
+		myDisplay.drawString(column(1),row(2),">Inc");
+		myDisplay.drawString(column(1),row(3)," Min");
+	}
+	else if(display == 2){
+		myDisplay.drawString(column(1),row(1)," Max");
+		myDisplay.drawString(column(1),row(2)," Inc");
+		myDisplay.drawString(column(1),row(3),">Min");
+	}
+	myDisplay.show();
+}
+void menu3Running(){
+	myDisplay.clear();
+	myDisplay.drawString(column(1),row(1),"Current:");
+	myDisplay.drawNumber(column(1),row(2),stepCurrentPosition);
+	myDisplay.drawString(column(1),row(3),"Goal:");
+	myDisplay.drawNumber(column(1),row(4),stepGoalPosition);
+	myDisplay.show();
+}
+

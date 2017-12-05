@@ -28,8 +28,9 @@ void menu2Refl();
 void menuDebugQ();
 void menuDebugS();
 void menuDisplayItemCount();
-void menu3Display(unsigned char);
+void menu3Display(unsigned char display);
 void menu3Running();
-void menu3ValueSelection(unsigned char);
+void menu3ValueSelection(unsigned char select);
+void menuDisplayValue(unsigned char value, const char*label);
 
 #endif /* MENU_H_ */
