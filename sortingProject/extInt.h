@@ -12,5 +12,6 @@
 
 
 void initExtInt(void);
+void dequeueItem(void);
 
 #endif /* EXTINT_H_ */

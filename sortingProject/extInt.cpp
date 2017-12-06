@@ -29,7 +29,7 @@ volatile char backOfQueue = 0;
 volatile char reflQueueChange = 0;
 volatile unsigned char reflInARow = 0;
 volatile unsigned char risingEdge = 1;
-volatile unsigned int blackMinRef = 950; //Min value read minus 5
+volatile unsigned int blackMinRef = 920; //Min value read minus 5
 volatile unsigned int whiteMinRef = 800;
 volatile unsigned int steelMinRef = 190;
 volatile unsigned int aluminumMinRef = 15;
@@ -143,6 +143,39 @@ ISR(INT2_vect){
 	
 }
 
+void countBlockType(){
+	//////////COUNT NUMBER OF EACH SORTED
+	if(reflQueue[frontOfQueue] == BLACK){
+		blackCount++;
+	}
+	else if(reflQueue[frontOfQueue] == WHITE){
+		whiteCount++;
+	}
+	else if(reflQueue[frontOfQueue] == STEEL){
+		steelCount++;
+	}
+	else if(reflQueue[frontOfQueue] == ALUMINUM){
+		aluminumCount++;
+	}
+}
+	
+
+void dequeueItem(){
+	char nextItem = 0;
+	//////////DEQUEUE BLOCK
+	if(reflQueueCount < 2){
+		reflQueueCount = 0;
+	}
+	else{
+		nextItem = (frontOfQueue+1) & 7; //& 7 implements a rotating array position
+		if(reflQueue[frontOfQueue] != reflQueue[nextItem]){
+			delayStepper = 1;
+			stepperReady = 0;
+		}
+		frontOfQueue = nextItem;
+		reflQueueCount--;
+	}
+}
 
 ISR(INT3_vect){
 	char nextItem = 0;

@@ -305,7 +305,9 @@ ISR(TIMER0_COMPA_vect){
 			stepperReady = 0; //*** this may not be needed?
 			PORTC = 0x0;
 			if(shortAbsDifference == 0){ //*** needs to be tested
-				stepperDelay = 1;
+				
+				delayStepper = 2;
+				//mTimer(50);
 				waitToReachGoal = 0;
 				//reflQueueChange = 1;
 				if(reflQueue[frontOfQueue] == BLACK){

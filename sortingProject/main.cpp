@@ -32,6 +32,8 @@ extern volatile unsigned int lowestRefl;
 extern volatile char frontOfQueue;
 extern volatile char backOfQueue;
 extern volatile unsigned char delayStepper;
+extern volatile unsigned char blockReady;
+extern volatile unsigned char stepperReady;
 
 
 Framebuffer myDisplay;
@@ -64,7 +66,7 @@ int main(void){
 	
 	motorBrake();
 	motorSpeed(0xc0);//doesn't seem to like 0xdf
-
+	homeStepper();
 	/*//Manual Optical sensor calibration
 		static unsigned int min = 1023;
 		sei();
@@ -215,7 +217,12 @@ int main(void){
 			//turn off interrupts? ***
 			cli();
 			if(delayStepper){
-				mTimer(STEPPER_MOVE_DELAY);
+				if(delayStepper == 2){
+					mTimer(100);
+				}
+				else{
+					mTimer(STEPPER_MOVE_DELAY);
+				}
 				delayStepper = 0;
 			}	
 			
@@ -237,6 +244,10 @@ int main(void){
 			//turn interrupts back on? ***
 			sei();
 		}
+		
+// 		if(blockReady && stepperReady){
+// 			MOTOR_PORT = (MOTOR_PORT & ~MOTOR_PINS) | MOTOR_FORWARD;
+// 		}
 
 		//Allows user to go to results display
 		if((PINE & JS_RIGHT_PIN) == 0){
