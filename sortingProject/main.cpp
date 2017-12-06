@@ -63,7 +63,7 @@ int main(void){
 	initStepper();
 	
 	motorBrake();
-	motorSpeed(0xaf);
+	motorSpeed(0xc0);//doesn't seem to like 0xdf
 
 	/*//Manual Optical sensor calibration
 		static unsigned int min = 1023;

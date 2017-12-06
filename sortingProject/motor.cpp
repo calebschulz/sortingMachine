@@ -17,7 +17,7 @@ void initMotor(void){
 	TCCR2A|= _BV(COM2A1); 
 
 	//No prescaler
-	TCCR2B |= _BV(CS20);
+	TCCR2B |= _BV(CS21); //_BV(CS20);
 
 	//Timer/Counter0 Output Compare Match A Interrupt Enable
 	//TIMSK2 |= _BV(OCIE2A);

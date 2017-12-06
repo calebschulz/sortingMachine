@@ -303,12 +303,28 @@ ISR(TIMER0_COMPA_vect){
 	if(shortAbsDifference < CLOSE_ENOUGH){
 		if(waitToReachGoal){
 			stepperReady = 0; //*** this may not be needed?
+			PORTC = 0x0;
 			if(shortAbsDifference == 0){ //*** needs to be tested
+				stepperDelay = 1;
 				waitToReachGoal = 0;
-				reflQueueChange = 1;
+				//reflQueueChange = 1;
+				if(reflQueue[frontOfQueue] == BLACK){
+					stepGoalPosition = STEPPER_BLACK_POSITION;
+				}
+				else if(reflQueue[frontOfQueue] == WHITE){
+					stepGoalPosition = STEPPER_WHITE_POSITION;
+				}
+				else if(reflQueue[frontOfQueue] == STEEL){
+					stepGoalPosition = STEPPER_STEEL_POSITION;
+				}
+				else if(reflQueue[frontOfQueue] == ALUMINUM){
+					stepGoalPosition = STEPPER_ALUMINIUM_POSITION;
+				}
 			}
 		}
 		else if(blockReady){
+			stepperReady = 0;
+			PORTC = 0xf;
 			//////////MOTOR ON
 			MOTOR_PORT = (MOTOR_PORT & ~MOTOR_PINS) | MOTOR_FORWARD;
 			blockReady = 0;
@@ -341,10 +357,12 @@ ISR(TIMER0_COMPA_vect){
 		} 
 		else{
 			stepperReady = 1;
+			PORTC = 0xf;
 		}
 	}
 	else{
 		stepperReady = 0;
+		PORTC = 0;
 	}
 	//////////MOVE TOWARDS GOAL POSITION
 	if(((difference > 0) && (difference < 100)) || (difference < -100)){//***change to make up for faster direction of stepper

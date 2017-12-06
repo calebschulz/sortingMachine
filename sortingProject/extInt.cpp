@@ -29,8 +29,8 @@ volatile char backOfQueue = 0;
 volatile char reflQueueChange = 0;
 volatile unsigned char reflInARow = 0;
 volatile unsigned char risingEdge = 1;
-volatile unsigned int blackMinRef = 880; //Min value read minus 5
-volatile unsigned int whiteMinRef = 775;
+volatile unsigned int blackMinRef = 950; //Min value read minus 5
+volatile unsigned int whiteMinRef = 800;
 volatile unsigned int steelMinRef = 190;
 volatile unsigned int aluminumMinRef = 15;
 volatile unsigned char blackCount = 0;
@@ -86,7 +86,7 @@ ISR(INT2_vect){
 	if(PIND & 0x4){
 		//////////START ADC
 		lowestRefl = 1023;
-		//adcTotalCount = 0;
+		//adcTotalCount = 1; //***
 		//adcAverage = 0;
 		//runningSum
 		//Enable ADC interrupt

@@ -164,8 +164,8 @@ ISR(ADC_vect) {
 	//However it will weight the average towards the value of where it is stopped
 	//so if it stops with the sensor near the edge of the blok the reading will be
 	//pulled higher than the actual value.
-	//adcAverage = adcAverage + (ADC - adcAverage)/adcTotalCount;
-			
+	//lowestRefl = lowestRefl + (ADC - lowestRefl)/adcTotalCount; //adcAverage
+	//adcTotalCount++;
 	//Start another ADC conversion
 	ADCSRA |= _BV(ADSC);
 }
