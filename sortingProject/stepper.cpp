@@ -77,7 +77,7 @@ void homeStepper(void){
 	while(PINE & STEPPER_HOME_PIN){
 		rotateStepper(1,1);
 	}
-	stepCurrentPosition = STEPPER_POSITION_OFFSET;
+	stepCurrentPosition = STEPPER_BLACK_POSITION - STEPPER_POSITION_OFFSET;
 }
 
 //Ideal delay values when using 1 battery weight
@@ -105,8 +105,7 @@ void rotateStepper(int numSteps, int directionCW){
 				stepCurrentPosition--;// = (stepPosition--);
 			}
 			stepAPosition = (stepAPosition - 1) & 3;// = (stepAPosition--);
-
-			
+	
 		}
 		PORTA = (PORTA & 0b11000000) | stepArray[stepAPosition];
 
@@ -303,7 +302,6 @@ ISR(TIMER0_COMPA_vect){
 	if(shortAbsDifference < CLOSE_ENOUGH){
 		if(waitToReachGoal){
 			stepperReady = 0; //*** this may not be needed?
-			PORTC = 0x0;
 			if(shortAbsDifference == 0){ //*** needs to be tested
 				
 				delayStepper = 2;
@@ -326,7 +324,6 @@ ISR(TIMER0_COMPA_vect){
 		}
 		else if(blockReady){
 			stepperReady = 0;
-			PORTC = 0xf;
 			//////////MOTOR ON
 			MOTOR_PORT = (MOTOR_PORT & ~MOTOR_PINS) | MOTOR_FORWARD;
 			blockReady = 0;
@@ -359,12 +356,10 @@ ISR(TIMER0_COMPA_vect){
 		} 
 		else{
 			stepperReady = 1;
-			PORTC = 0xf;
 		}
 	}
 	else{
 		stepperReady = 0;
-		PORTC = 0;
 	}
 	//////////MOVE TOWARDS GOAL POSITION
 	if(((difference > 0) && (difference < 100)) || (difference < -100)){//***change to make up for faster direction of stepper

@@ -7,6 +7,7 @@
 
 #include "Framebuffer.h"
 #include "extInt.h"
+#include "settings.h"
 
 extern Framebuffer myDisplay;
 extern volatile unsigned char reflQueue[];
@@ -17,6 +18,9 @@ extern volatile int stepCurrentPosition;
 extern volatile int stepGoalPosition;
 extern volatile unsigned char stepperDelay;
 extern volatile unsigned int lowestRefl;
+extern volatile unsigned int pLowestRefl;
+
+extern volatile unsigned int maxRefl;
 extern volatile unsigned char blackCount;
 extern volatile unsigned char whiteCount;
 extern volatile unsigned char steelCount;
@@ -66,9 +70,15 @@ void menu2Refl(){
 
 void menuDebugQ(){
 	myDisplay.clear();
+	
+	#ifndef CALIBRATE_REFL
 	myDisplay.drawString(0,0,"Queue");
-	//myDisplay.drawNumber(0,0,adcAverage);//lowestRefl); ****
-	myDisplay.drawNumber(72,0,lowestRefl); 
+	myDisplay.drawNumber(72,0,lowestRefl);
+	#else //
+	myDisplay.drawNumber(0,0,pLowestRefl);
+	myDisplay.drawNumber(72,0,maxRefl); 
+	#endif
+	
 	myDisplay.drawRectangle(0,16,127,17,1);
 	myDisplay.drawNumber(0,20,reflQueue[0]); 
 	myDisplay.drawNumber(12,20,reflQueue[1]);

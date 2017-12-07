@@ -4,9 +4,13 @@
 #include "adc.h"
 #include "motor.h"
 #include "Framebuffer.h"
+#include "settings.h"
 
 char cValue = 7;
-volatile unsigned int lowestRefl = 1023; //Global used when finding object reflectivity
+volatile unsigned int lowestRefl = 1023; //Globals used when finding object reflectivity
+volatile unsigned int pLowestRefl = 1023; //used for calibration
+volatile unsigned int maxRefl = 0; 
+
 volatile unsigned int adcAverage = 0;
 volatile unsigned char adcTotalCount = 0;
 unsigned int calibReading = 1023;
@@ -140,32 +144,35 @@ ISR(ADC_vect) {
 	//////////Moving Average filter (Note: need to calibrate motor speed so that adc reads 128 times going across blocks)
 	//This one overflows and as such won't work for this project unless we significantly reduce the sampling rate
 	//It also will not work in special cases where the belt stops a block right by the sensor.
-// 	if(adcTotalCount < 128){
-// 		adcAverage = adcAverage + ADC - (adcAverage >> 7); //MA[n]* = MA[n-1]* + x[n] - MA[n-1]*/N
-// 		adcTotalCount++;
-// 		//Start another ADC conversion
-// 		ADCSRA |= _BV(ADSC);
-// 	}
-// 	else{
-// 		adcAverage >>= 7;	//MA*/N
-// 		adcTotalCount++;
-// 	}
-	
-	//Simples method that will work great for sorting (as long as it is calibrated well)
-	//Downside is that objects that have a reflectivity between the different kind of blocks 
-	//won't be able to be detected.
-	if(ADC < lowestRefl){
-		lowestRefl = ADC;
+	if(adcTotalCount < ADC_FILTER_COUNT){
+		adcAverage += ADC;
+		adcTotalCount++;
+	}
+	else if(adcTotalCount == ADC_FILTER_COUNT){
+		adcAverage >>= ADC_FILTER_MOD_DIV;	//MA*/N
+		adcTotalCount = 0;
+		
+		if(adcAverage < lowestRefl){
+			lowestRefl = adcAverage;
+		}
+		
+		#ifdef CALIBRATE_REFL
+		if(adcAverage < pLowestRefl){
+			pLowestRefl = adcAverage;
+		}
+		#endif
+		
+		adcAverage = 0;
 	}
 	
-	//Another moving average method that will be heaver since it has a division but
-	//you don't need a set amount of iterations.
-	//Will work in the case of the motor stopping with a block right on the adc,
-	//However it will weight the average towards the value of where it is stopped
-	//so if it stops with the sensor near the edge of the blok the reading will be
-	//pulled higher than the actual value.
-	//lowestRefl = lowestRefl + (ADC - lowestRefl)/adcTotalCount; //adcAverage
-	//adcTotalCount++;
+	//
+// 	if(ADC < lowestRefl){
+// 		lowestRefl = ADC;
+// 	}
+// 	if(ADC < pLowestRefl){
+// 		pLowestRefl = ADC;
+// 	}
+
 	//Start another ADC conversion
 	ADCSRA |= _BV(ADSC);
 }

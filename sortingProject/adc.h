@@ -9,6 +9,11 @@
 #define ALUMINUM 3
 #define UNKNOWN	4
 
+//Note: that this value must be a multiple of 2
+//You must change count and mod_div in conjucture 
+#define ADC_FILTER_COUNT 32
+#define ADC_FILTER_MOD_DIV 5 //bitwise division (i.e. >> 3  ==  /8)
+
 
 void initADC();
 void startADC();

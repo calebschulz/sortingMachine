@@ -21,6 +21,7 @@
 
 volatile unsigned char debug = 1;
 unsigned char deQueue = 0;
+unsigned volatile char pauseSystem = 0;
 
 extern volatile unsigned char reflQueue[];
 extern volatile char reflQueueCount;
@@ -65,7 +66,7 @@ int main(void){
 	initStepper();
 	
 	motorBrake();
-	motorSpeed(0xc0);//doesn't seem to like 0xdf
+	motorSpeed(0xcf);//doesn't seem to like 0xdf
 	homeStepper();
 	/*//Manual Optical sensor calibration
 		static unsigned int min = 1023;
@@ -179,7 +180,6 @@ int main(void){
 				goto menu;
 			}
 			else if(menuSelector == MENU_STEPPER){
-				PORTC = 1;
 				stepperCalibration();
 				goto calibration;
 			}
@@ -188,7 +188,7 @@ int main(void){
 		
 	//////////DISPLAY RESULTS MENU SCREEN 3
 	displayResults:
-	menuDisplayItemCount();
+	menuDebugQ();
 	while(1){
 		if((PINB & JS_LEFT_PIN) == 0){
 			goto mainLoop;
@@ -250,7 +250,7 @@ int main(void){
 // 		}
 
 		//Allows user to go to results display
-		if((PINE & JS_RIGHT_PIN) == 0){
+		if((PINE & JS_RIGHT_PIN) == 0 || pauseSystem){
 			//Brake motor
 			MOTOR_PORT = (MOTOR_PORT & ~MOTOR_PINS) | MOTOR_BRAKE;
 			//Wait for motor to stop before turning off interrupts

@@ -12,15 +12,18 @@
 #include "stepper.h"
 #include "timer.h"
 #include "Framebuffer.h"
+#include "settings.h"
 
 extern Framebuffer myDisplay;
 extern volatile unsigned char debug;
 extern volatile char stepperReady;
 extern volatile unsigned int lowestRefl;
+extern volatile unsigned int maxRefl; 
 extern unsigned char deQueue;
 extern unsigned char delayStepper;
 extern volatile unsigned int adcAverage;
 extern volatile unsigned char adcTotalCount;
+extern volatile unsigned char pauseSystem;
 
 volatile unsigned char reflQueue[8];
 volatile unsigned char reflQueueCount = 0;
@@ -29,10 +32,10 @@ volatile char backOfQueue = 0;
 volatile char reflQueueChange = 0;
 volatile unsigned char reflInARow = 0;
 volatile unsigned char risingEdge = 1;
-volatile unsigned int blackMinRef = 920; //Min value read minus 5
-volatile unsigned int whiteMinRef = 800;
-volatile unsigned int steelMinRef = 190;
-volatile unsigned int aluminumMinRef = 15;
+volatile unsigned int blackMinRef = 970; //930,934@0xdf, 958-987 w/ 32filt,   975-1000
+volatile unsigned int whiteMinRef = 890; //880  922-973 w/ 64filter, 911-963, 927-966  
+volatile unsigned int steelMinRef = 120;
+volatile unsigned int aluminumMinRef = 20;
 volatile unsigned char blackCount = 0;
 volatile unsigned char whiteCount = 0;
 volatile unsigned char steelCount = 0;
@@ -86,9 +89,9 @@ ISR(INT2_vect){
 	if(PIND & 0x4){
 		//////////START ADC
 		lowestRefl = 1023;
-		//adcTotalCount = 1; //***
-		//adcAverage = 0;
-		//runningSum
+		adcTotalCount = 0; 
+		adcAverage = 0;
+		
 		//Enable ADC interrupt
 		ADCSRA |= _BV(ADIE);
 		//Start ADC conversion
@@ -102,7 +105,13 @@ ISR(INT2_vect){
 		ADCSRA &= ~_BV(ADIE);
 		//Cancel any pending ADC conversions
 		ADCSRA &= ~_BV(ADSC);
-
+	
+		#ifdef CALIBRATE_REFL
+		if(lowestRefl > maxRefl){
+			maxRefl = lowestRefl;
+		}
+		#endif
+		
 		//////////CLASSIFY BLOCK
 		if(lowestRefl > blackMinRef){
 			itemValue = BLACK;
@@ -117,13 +126,18 @@ ISR(INT2_vect){
 			itemValue = ALUMINUM;
 		}
 		else{
+			#ifdef FAST_MODE
+			itemValue = BLACK;
+			#else
 			itemValue = UNKNOWN;
+			//pauseSystem = 1;
+			#endif
 		}
 
 		//////////ADD BLOCK TO QUEUE
 		//Check to make sure we aren't passed max
 		if(reflQueueCount > 7){ 
-			PORTC = 0xff;
+			PORTC = 0xaa;
 		}
 		else if(reflQueueCount == 0){
 			reflQueueCount++;
@@ -141,40 +155,6 @@ ISR(INT2_vect){
 	//Clear interrupt flag
 	EIFR = 0x4; 
 	
-}
-
-void countBlockType(){
-	//////////COUNT NUMBER OF EACH SORTED
-	if(reflQueue[frontOfQueue] == BLACK){
-		blackCount++;
-	}
-	else if(reflQueue[frontOfQueue] == WHITE){
-		whiteCount++;
-	}
-	else if(reflQueue[frontOfQueue] == STEEL){
-		steelCount++;
-	}
-	else if(reflQueue[frontOfQueue] == ALUMINUM){
-		aluminumCount++;
-	}
-}
-	
-
-void dequeueItem(){
-	char nextItem = 0;
-	//////////DEQUEUE BLOCK
-	if(reflQueueCount < 2){
-		reflQueueCount = 0;
-	}
-	else{
-		nextItem = (frontOfQueue+1) & 7; //& 7 implements a rotating array position
-		if(reflQueue[frontOfQueue] != reflQueue[nextItem]){
-			delayStepper = 1;
-			stepperReady = 0;
-		}
-		frontOfQueue = nextItem;
-		reflQueueCount--;
-	}
 }
 
 ISR(INT3_vect){

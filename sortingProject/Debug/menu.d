@@ -15,7 +15,7 @@ menu.d menu.o: .././menu.cpp .././Framebuffer.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h \
  .././SSD1306.h .././I2C.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\twi.h \
- .././extInt.h
+ .././extInt.h .././settings.h
 
 .././Framebuffer.h:
 
@@ -54,3 +54,5 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\twi.h:
 
 .././extInt.h:
+
+.././settings.h:
