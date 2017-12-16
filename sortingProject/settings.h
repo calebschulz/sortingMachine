@@ -17,7 +17,7 @@
 //This allows the user to keep on putting the same type of block
 //multiple times to find the values to use for calibration.
 //Comment it out to turn this mode off.
-#define CALIBRATE_REFL
+//#define CALIBRATE_REFL
 
 //volatile unsigned char mode
 

@@ -32,10 +32,14 @@ volatile char backOfQueue = 0;
 volatile char reflQueueChange = 0;
 volatile unsigned char reflInARow = 0;
 volatile unsigned char risingEdge = 1;
-volatile unsigned int blackMinRef = 970; //930,934@0xdf, 958-987 w/ 32filt,   975-1000
-volatile unsigned int whiteMinRef = 890; //880  922-973 w/ 64filter, 911-963, 927-966  
-volatile unsigned int steelMinRef = 120;
-volatile unsigned int aluminumMinRef = 20;
+volatile unsigned int blackMinRef = 940; //965-1002  , 957-966 
+//930,934@0xdf, 958-987 w/ 32filt,   975-1000
+volatile unsigned int whiteMinRef = 880; //900-976   , 891-927
+//880  922-973 w/ 64filter, 911-963, 927-966  917-970`
+volatile unsigned int steelMinRef = 300; //543-730   , 395-616
+//439-697
+volatile unsigned int aluminumMinRef = 15; //54-233  , 50-133
+//56-169
 volatile unsigned char blackCount = 0;
 volatile unsigned char whiteCount = 0;
 volatile unsigned char steelCount = 0;
@@ -160,12 +164,12 @@ ISR(INT2_vect){
 ISR(INT3_vect){
 	char nextItem = 0;
 	//////////"Debounce" *** seems to work fine with 1 ms delay
-	mTimer(5);
+	mTimer(10);
 
 	if((PIND & 0x8) == 0){
 		if(stepperReady){
 			//////////PUT BLOCK IN BIN (leave motor on) 
-			
+			//PORTC++;
 			//////////COUNT NUMBER OF EACH SORTED
 			if(reflQueue[frontOfQueue] == BLACK){
 				blackCount++;

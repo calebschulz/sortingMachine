@@ -5,10 +5,10 @@
 //Below 2 were working well for our station
 //#define MAX_STEPPER_DELAY 120 //1 ms = 7.8125~8 -> 18ms ~ 144  //1ms = 31.25 , 
 //#define MIN_STEPPER_DELAY 60 //8 ms
-#define MAX_STEPPER_DELAY 150 //1 ms = 7.8125~8 -> 18ms ~ 144  //1ms = 31.25 ,
-#define MIN_STEPPER_DELAY 60 //8 ms
+#define MAX_STEPPER_DELAY 140 //1 ms = 7.8125~8 -> 18ms ~ 144  //1ms = 31.25 ,
+#define MIN_STEPPER_DELAY 70 //8 ms
 
-#define STEPPER_MOVE_DELAY 50 //was 10
+#define STEPPER_MOVE_DELAY 200 
 #define STEPPER_POSITION_OFFSET -6
 #define STEPPER_HOME_PIN 0b01000000
 #define STEPPER_DELAY_REGISTER OCR3A

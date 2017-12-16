@@ -41,6 +41,7 @@ Framebuffer myDisplay;
 
 int main(void){
 	unsigned char menuSelector = 0;
+	unsigned char rampDown = 0;
 	
 	cli(); //Ensure interrupts are turned off
 	//Set system clock to 8MHz
@@ -66,7 +67,7 @@ int main(void){
 	initStepper();
 	
 	motorBrake();
-	motorSpeed(0xcf);//doesn't seem to like 0xdf
+	motorSpeed(0xc2);//doesn't seem to like 0xdf
 	homeStepper();
 	/*//Manual Optical sensor calibration
 		static unsigned int min = 1023;
@@ -191,6 +192,7 @@ int main(void){
 	menuDebugQ();
 	while(1){
 		if((PINB & JS_LEFT_PIN) == 0){
+			rampDown = 0;
 			goto mainLoop;
 		}
 		else if(JS_UP_PRESSED){
@@ -203,13 +205,15 @@ int main(void){
 		
     //////////MAIN LOOP
 	mainLoop:
-	
+	myDisplay.clear();
+	myDisplay.drawString(column(1),row(1),"Running...");
+	myDisplay.show();
 	motorForward(); 
 	startStepper();
 	sei();
     while (1){
 		//Debugging routines
-		menuDebugQ();
+		//menuDebugQ();
 		//menuDebugS();
 		
 		//while(1){};
@@ -217,12 +221,12 @@ int main(void){
 			//turn off interrupts? ***
 			cli();
 			if(delayStepper){
-				if(delayStepper == 2){
-					mTimer(100);
-				}
-				else{
+// 				if(delayStepper == 2){
+// 					mTimer(100);
+// 				}
+// 				else{
 					mTimer(STEPPER_MOVE_DELAY);
-				}
+				//}
 				delayStepper = 0;
 			}	
 			
@@ -245,18 +249,31 @@ int main(void){
 			sei();
 		}
 		
-// 		if(blockReady && stepperReady){
-// 			MOTOR_PORT = (MOTOR_PORT & ~MOTOR_PINS) | MOTOR_FORWARD;
-// 		}
-
 		//Allows user to go to results display
-		if((PINE & JS_RIGHT_PIN) == 0 || pauseSystem){
+		if((PINE & JS_RIGHT_PIN) == 0){
 			//Brake motor
 			MOTOR_PORT = (MOTOR_PORT & ~MOTOR_PINS) | MOTOR_BRAKE;
 			//Wait for motor to stop before turning off interrupts
 			mTimer(MOTOR_BRAKE_TIME_MS); 
 			cli();
 			goto displayResults;
+		}
+		else if(JS_DOWN_PRESSED){
+			rampDown = 1;	
+		}
+		
+		if(rampDown){
+			menuDisplayValue(rampDown,"RampD");
+			if(rampDown < 40){
+				rampDown++;
+			}
+			else{
+				if(!reflQueueCount){
+					mTimer(500);
+					MOTOR_PORT = (MOTOR_PORT & ~MOTOR_PINS) | MOTOR_BRAKE;
+					goto displayResults;
+				}
+			}
 		}
 		
     }
