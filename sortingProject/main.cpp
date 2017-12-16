@@ -1,8 +1,8 @@
 /*
- * simpleClassifier.cpp
+ * main.cpp
  *
  * Created: 11/9/2017 3:26:55 PM
- * Author : Owner
+ * Author : Caleb Schulz
  */ 
 
 #include <avr/io.h>
@@ -16,26 +16,11 @@
 #include "stepper.h"
 #include "GPIO.h"
 #include "menu.h"
-
-
+#include "GLOBALS.h"
 
 volatile unsigned char debug = 1;
 unsigned char deQueue = 0;
 unsigned volatile char pauseSystem = 0;
-
-extern volatile unsigned char reflQueue[];
-extern volatile char reflQueueCount;
-extern volatile char reflQueueChange;
-extern volatile unsigned char reflInARow;
-extern volatile int stepCurrentPosition; //*** debug
-extern volatile int stepGoalPosition;
-extern volatile unsigned int lowestRefl;
-extern volatile char frontOfQueue;
-extern volatile char backOfQueue;
-extern volatile unsigned char delayStepper;
-extern volatile unsigned char blockReady;
-extern volatile unsigned char stepperReady;
-
 
 Framebuffer myDisplay;
 
@@ -69,24 +54,6 @@ int main(void){
 	motorBrake();
 	motorSpeed(0xc2);//doesn't seem to like 0xdf
 	homeStepper();
-	/*//Manual Optical sensor calibration
-		static unsigned int min = 1023;
-		sei();
-		motorForward();
-		while(1){
-			if(min > lowestRefl){
-				min = lowestRefl;
-			}
-			myDisplay.clear();
-			myDisplay.drawString(0,0,"ADC Min V");
-			myDisplay.drawRectangle(0,16,127,17,1);
-			myDisplay.drawNumber(0,20,min);
-			myDisplay.show();
-			if((PINE & JS_DOWN_PIN) == 0){
-				min = 1023;
-			}
-		}*/
-	
 	
 	////////MENU SCREEN 1
 	menu:
@@ -212,21 +179,16 @@ int main(void){
 	startStepper();
 	sei();
     while (1){
-		//Debugging routines
-		//menuDebugQ();
-		//menuDebugS();
-		
-		//while(1){};
+		////////ADJUST GOAL POSITION FOR STEPPER
 		if(reflQueueChange){
-			//turn off interrupts? ***
 			cli();
 			if(delayStepper){
-// 				if(delayStepper == 2){
-// 					mTimer(100);
-// 				}
-// 				else{
+ 				if(delayStepper == 2){
+ 					mTimer(100);
+ 				}
+ 				else{
 					mTimer(STEPPER_MOVE_DELAY);
-				//}
+				}
 				delayStepper = 0;
 			}	
 			
@@ -243,13 +205,11 @@ int main(void){
 			else if(reflQueue[frontOfQueue] == ALUMINUM){
 				stepGoalPosition = STEPPER_ALUMINIUM_POSITION;
 			}
-
 			reflQueueChange = 0;
-			//turn interrupts back on? ***
 			sei();
 		}
 		
-		//Allows user to go to results display
+		//////////PAUSE AND DISPLAY RESULTS
 		if((PINE & JS_RIGHT_PIN) == 0){
 			//Brake motor
 			MOTOR_PORT = (MOTOR_PORT & ~MOTOR_PINS) | MOTOR_BRAKE;
@@ -258,6 +218,7 @@ int main(void){
 			cli();
 			goto displayResults;
 		}
+		//////////RAMP DOWN
 		else if(JS_DOWN_PRESSED){
 			rampDown = 1;	
 		}

@@ -1,3 +1,9 @@
+/*
+ *	motor.h 
+ *
+ *  Author: Caleb Schulz
+ */ 
+
 #ifndef MOTOR_H_
 #define MOTOR_H_
 

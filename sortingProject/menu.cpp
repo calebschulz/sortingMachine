@@ -2,32 +2,13 @@
  * menu.cpp
  *
  * Created: 11/17/2017 3:45:03 PM
- *  Author: Owner
+ *  Author: Caleb Schulz
  */ 
 
 #include "Framebuffer.h"
 #include "extInt.h"
 #include "settings.h"
-
-extern Framebuffer myDisplay;
-extern volatile unsigned char reflQueue[];
-extern volatile char frontOfQueue;
-extern volatile char backOfQueue;
-extern volatile unsigned char reflQueueCount;
-extern volatile int stepCurrentPosition;
-extern volatile int stepGoalPosition;
-extern volatile unsigned char stepperDelay;
-extern volatile unsigned int lowestRefl;
-extern volatile unsigned int pLowestRefl;
-
-extern volatile unsigned int maxRefl;
-extern volatile unsigned char blackCount;
-extern volatile unsigned char whiteCount;
-extern volatile unsigned char steelCount;
-extern volatile unsigned char aluminumCount;
-extern volatile unsigned int debugCount;
-extern volatile unsigned int adcAverage;
-extern volatile unsigned char adcTotalCount;
+#include "GLOBALS.h"
 
 void menu1Start(){
 	myDisplay.clear();

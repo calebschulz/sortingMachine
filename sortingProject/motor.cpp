@@ -1,3 +1,9 @@
+/*
+ * 	motor.cpp
+ *
+ *  Author: Caleb Schulz
+ */ 
+
 #include <stdlib.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>

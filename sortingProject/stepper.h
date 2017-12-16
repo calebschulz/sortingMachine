@@ -1,3 +1,13 @@
+/*
+ * stepper.h
+ *
+ *  Author: Caleb Schulz
+ */ 
+
+#ifndef STEPPER_H_
+#define STEPPER_H_
+
+
 //Initial values used 11-27: accel 15, decel 11
 #define NUMBER_STEPS_ACCELERATION 20 //20
 #define NUMBER_STEPS_DECELERATION 20 //20
@@ -28,3 +38,5 @@ void startStepper();
 void rotateStepper(int numSteps, int directionCW);
 void rotateStepperToGoal();
 void stepperCalibration();
+
+#endif

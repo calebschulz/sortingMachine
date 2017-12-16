@@ -1,3 +1,12 @@
+/*
+ * 	adc.h
+ *
+ *  Author: Caleb Schulz
+ */ 
+
+#ifndef ADC_H_
+#define ADC_H_
+
 #define REF_SENSOR_PORT PIND 
 #define REF_SENSOR_PIN 0x08 //OR sensor
  
@@ -21,3 +30,5 @@ void stopADC();
 void calibrateADC();
 void findLowestReading(const char * objectType);
 unsigned int findAverageReading(const char * objectType);
+
+#endif

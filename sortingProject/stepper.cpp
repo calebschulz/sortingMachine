@@ -1,3 +1,9 @@
+/*
+ * 	stepper.cpp
+ *
+ *  Author: Caleb Schulz
+ */ 
+
 #include <stdlib.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -9,6 +15,7 @@
 #include "adc.h"
 #include "menu.h"
 #include "GPIO.h"
+#include "GLOBALS.h"
 
 //Globals
 volatile unsigned char stepperDelay = MAX_STEPPER_DELAY;
@@ -28,19 +35,6 @@ volatile unsigned char stepperMaxDelay = MAX_STEPPER_DELAY;
 volatile unsigned char stepperMinDelay = MIN_STEPPER_DELAY;
 volatile unsigned char stepperAccelRate = STEPPER_ACCELERATION_RATE;
 volatile unsigned char waitToReachGoal = 0;
-
-
-extern volatile char blockReady;
-extern volatile char reflQueueCount;
-extern volatile char reflQueueChange;
-extern volatile unsigned char reflQueue[];
-extern unsigned char deQueue;
-extern volatile char frontOfQueue;
-extern volatile unsigned char backOfQueue;
-extern volatile unsigned char blackCount;
-extern volatile unsigned char whiteCount;
-extern volatile unsigned char steelCount;
-extern volatile unsigned char aluminumCount;
 
 void initStepper(void){
 	//PA5-0 output for stepper control lines

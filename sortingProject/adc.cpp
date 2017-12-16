@@ -1,3 +1,10 @@
+/*
+ * adc.cpp
+ *
+ * Created: 11/9/2017 3:26:03 PM
+ *  Author: Caleb Schulz
+ */ 
+
 #include <stdlib.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -5,25 +12,18 @@
 #include "motor.h"
 #include "Framebuffer.h"
 #include "settings.h"
+#include "GLOBALS.h"
 
 char cValue = 7;
 volatile unsigned int lowestRefl = 1023; //Globals used when finding object reflectivity
 volatile unsigned int pLowestRefl = 1023; //used for calibration
 volatile unsigned int maxRefl = 0; 
-
 volatile unsigned int adcAverage = 0;
 volatile unsigned char adcTotalCount = 0;
 unsigned int calibReading = 1023;
-
-
-extern volatile unsigned int blackMinRef;
-extern volatile unsigned int whiteMinRef;
-extern volatile unsigned int aluminumMinRef;
-extern volatile unsigned int steelMinRef;
-extern volatile unsigned char reflQueueCount;
-extern Framebuffer myDisplay;
 volatile unsigned int debugCount=0;
 
+//Initialize ADC
 void initADC() {
 	
 	//Set Port F as Input
@@ -36,6 +36,7 @@ void initADC() {
 	ADMUX |= _BV(MUX0) | _BV(REFS0);// | _BV(ADLAR);
 }
 
+//Start taking ADC readings
 void startADC() {
 	//Enable ADC interrupt
 	ADCSRA |= _BV(ADIE);
@@ -43,6 +44,7 @@ void startADC() {
 	ADCSRA |= _BV(ADSC);
 }
 
+//Stop taking ADC readings
 void stopADC() {
 	//Disable ADC interrupt
 	ADCSRA &= ~_BV(ADIE);
@@ -50,6 +52,7 @@ void stopADC() {
 	ADCSRA &= ~_BV(ADSC);
 }
 
+//ADC calibration function
 void findLowestReading(const char * objectType){
 	while(reflQueueCount < 8){
 		if(lowestRefl < calibReading){
@@ -64,6 +67,7 @@ void findLowestReading(const char * objectType){
 	reflQueueCount = 0;
 }
 
+//Calibration testing
 unsigned int findAverageReading(const char * objectType){
 	
 	unsigned char calibCount = 0;
@@ -90,6 +94,7 @@ unsigned int findAverageReading(const char * objectType){
 }
 
 
+//Calibrate ADC for aluminum, steel, black, and white
 void calibrateADC(){
 	
 	myDisplay.clear();
@@ -165,7 +170,7 @@ ISR(ADC_vect) {
 		adcAverage = 0;
 	}
 	
-	//
+	//Without filtering
 // 	if(ADC < lowestRefl){
 // 		lowestRefl = ADC;
 // 	}
